@@ -260,44 +260,44 @@ export interface BorrowedBook {
   status: "borrowed" | "overdue" | "returned";
 }
 
-export interface BorrowedBooks {
-  id: string;
-  bookTitle: string;
-  author: string;
-  isbn: string;
-  borrowerName: string;
-  borrowerEmail: string;
-  borrowerPhone?: string;
-  borrowerId: string;
-  borrowDate: Date;
-  dueDate: Date;
-  returnDate?: Date;
-  status: "borrowed" | "overdue" | "returned";
-  fineAmount?: number;
-  renewalCount?: number;
-  maxRenewals?: number;
-}
-export interface Book {
-  id: string;
-  title: string;
-  author: string;
-  isbn: string;
-  category: string;
-  quantity: number;
-  available: number;
-}
+// export interface BorrowedBooks {
+//   id: string;
+//   bookTitle: string;
+//   author: string;
+//   isbn: string;
+//   borrowerName: string;
+//   borrowerEmail: string;
+//   borrowerPhone?: string;
+//   borrowerId: string;
+//   borrowDate: Date;
+//   dueDate: Date;
+//   returnDate?: Date;
+//   status: "borrowed" | "overdue" | "returned";
+//   fineAmount?: number;
+//   renewalCount?: number;
+//   maxRenewals?: number;
+// }
+// export interface Book {
+//   id: string;
+//   title: string;
+//   author: string;
+//   isbn: string;
+//   category: string;
+//   quantity: number;
+//   available: number;
+// }
 
-export interface BorrowedBook {
-  id: string;
-  bookTitle: string;
-  author: string;
-  isbn: string;
-  borrowerName: string;
-  borrowerEmail: string;
-  borrowDate: Date;
-  dueDate: Date;
-  status: "borrowed" | "overdue" | "returned";
-}
+// export interface BorrowedBook {
+//   id: string;
+//   bookTitle: string;
+//   author: string;
+//   isbn: string;
+//   borrowerName: string;
+//   borrowerEmail: string;
+//   borrowDate: Date;
+//   dueDate: Date;
+//   status: "borrowed" | "overdue" | "returned";
+// }
 
 export interface UserRoles {
   id: string;
@@ -309,6 +309,97 @@ export interface UserRoles {
   maxRenewals: number;
   finePerDay: number;
   isActive: boolean;
+}
+
+// Types for API responses and requests
+export interface BackendBook {
+  id: string;
+  title: string;
+  author: string;
+  isbn: string;
+  total_quantity: number;
+  available_quantity: number;
+  category?: string;
+  institution_id: string;
+  created_at: string;
+}
+
+export interface FrontendBook {
+  id: string;
+  title: string;
+  author: string;
+  isbn: string;
+  category: string;
+  quantity: number;
+  available: number;
+  institutionId: string;
+  createdAt?: string;
+}
+
+export interface BackendBorrowedBook {
+  id: string;
+  book: {
+    title: string;
+    author: string;
+    isbn?: string;
+  };
+  student_id: string;
+  student?: {
+    name: string;
+    email: string;
+  };
+  borrowed_at: string;
+  due_date: string;
+  returned_at?: string;
+  status: "borrowed" | "overdue" | "returned";
+}
+
+export interface FrontendBorrowedBook {
+  id: string;
+  bookTitle: string;
+  author: string;
+  isbn: string;
+  borrowerId: string;
+  borrowerName: string;
+  borrowerEmail: string;
+  borrowDate: Date;
+  dueDate: Date;
+  returnDate?: Date;
+  status: "borrowed" | "overdue" | "returned";
+}
+
+export interface AddBookRequest {
+  title: string;
+  author: string;
+  isbn: string;
+  total_quantity: number;
+  institution_id: string;
+  category?: string;
+}
+
+export interface UpdateBookRequest {
+  title?: string;
+  author?: string;
+  isbn?: string;
+  total_quantity?: number;
+  category?: string;
+}
+
+export interface BorrowBookRequest {
+  due_date: string;
+}
+
+export interface ReturnBookRequest {
+  returned_at: string;
+}
+
+export interface ExtendDueDateRequest {
+  new_due_date: string;
+}
+
+export interface APIError {
+  message: string;
+  status: number;
 }
 
 // Props for the BorrowedBooksOverview component
