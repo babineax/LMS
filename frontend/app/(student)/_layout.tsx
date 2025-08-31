@@ -1,5 +1,11 @@
 import { Tabs } from "expo-router";
 import { BookOpen, Building, Settings, Star } from "lucide-react-native";
+
+type TabBarIconProps = {
+  size: number;
+  color: string;
+};
+
 export default function StudentLayout() {
   return (
     <Tabs
