@@ -14,7 +14,7 @@ export default function Index() {
     <SafeAreaProvider>
       <StatusBar barStyle="dark-content" className="bg-bgLight" />
       <SafeAreaView className="flex-1">
-        <View className="flex-1 bg-[#F1FFF8]">
+        <View className="flex-1 bg-bgLight px-3">
           {/* Company Logo */}
           <View className="flex-row items-center justify-center my-8 py-8">
             <View className="bg-primaryColor p-12 rounded-xl">

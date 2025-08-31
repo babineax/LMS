@@ -11,6 +11,7 @@ import {
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { getAuthErrorMessage, validateSignUpForm } from "@/utils/validation";
+import { Eye, EyeOff } from "lucide-react-native";
 import { router } from "expo-router";
 
 interface FormData {
@@ -124,7 +125,7 @@ export default function App() {
   return (
     // Entire app wrapped inside SafeAreaProvider and SafeAreaView to prevent UI overlap with device notches.
     <SafeAreaProvider>
-      <SafeAreaView className="flex-1 bg-[#F1FFF8] font-sans">
+      <SafeAreaView className="flex-1 bg-bgLight font-sans gap-4">
         <View className="flex-1 p-10">
           <View className="flex-row justify-between mb-5 mt-3">
             <TouchableOpacity onPress={() => router.push("/")}>
@@ -133,18 +134,18 @@ export default function App() {
           </View>
 
           {/* Title */}
-          <Text className="text-4xl text-[#2C3E50] font-bold">Create Your Account</Text>
-          <Text className="text-xs text-[#2C3E50] mt-1">
+          <Text className="text-4xl text-headingColor font-bold">Create Your Account</Text>
+          <Text className="text-xs text-headingColor mt-1">
             Enter your details to create an account.
           </Text>
 
           {/* Form */}
-          <View className="mt-11 space-y-5">
+          <View className="mt-11 space-y-5 gap-4">
             {/* Full Name */}
             <View>
-              <Text className="text-lg text-[#2C3E50] mb-2">Full Name</Text>
+              <Text className="text-lg text-headingColor mb-2">Full Name</Text>
               <TextInput
-                className="border border-[#1ABC9C] rounded-lg h-12 px-2.5 text-[#2C3E50]"
+                className="border border-actionColor rounded-lg h-12 px-2.5 text-headingColor"
                 placeholder="Enter your full name"
                 placeholderTextColor="#7E7B7B"
                 value={formData.name}
@@ -159,10 +160,10 @@ export default function App() {
 
             {/* Email */}
             <View>
-              <Text className="text-lg text-[#2C3E50] mb-2">Email</Text>
+              <Text className="text-lg text-headingColor mb-2">Email</Text>
               <TextInput
                 keyboardType="email-address"
-                className="border border-[#1ABC9C] rounded-lg h-12 px-2.5 w-full focus:border-[#2B876E] focus:ring-2 focus:ring-[#2B876E]"
+                className="border border-actionColor rounded-lg h-12 px-2.5 w-full focus:border-[#2B876E] focus:ring-2 focus:ring-[#2B876E]"
                 placeholder="Enter your email"
                 placeholderTextColor="#7E7B7B"
                 value={formData.email}
@@ -178,11 +179,11 @@ export default function App() {
 
             {/* Password */}
             <View>
-              <Text className="text-lg text-[#2C3E50] mb-2">Password</Text>
-              <View className="flex-row items-center border border-[#1ABC9C] h-12 rounded-lg px-2.5 relative">
+              <Text className="text-lg text-headingColor mb-2">Password</Text>
+              <View className="flex-row items-center border border-actionColor h-12 rounded-lg px-2.5 relative">
                 <TextInput
                   secureTextEntry={!showPassword}
-                  className="flex-1 text-[#2C3E50]"
+                  className="flex-1 text-headingColor"
                   placeholder="Enter your password"
                   placeholderTextColor="#7E7B7B"
                   value={formData.password}
@@ -192,11 +193,17 @@ export default function App() {
                   className="absolute right-3 p-1"
                   onPress={() => setShowPassword(!showPassword)}
                 >
-                  <FontAwesome
+                  {/* <FontAwesome
                     name={showPassword ? "eye" : "eye-slash"}
                     size={24}
                     color="#7E7B7B"
-                  />
+                  /> */}
+                  {showPassword ? 
+                                    (<EyeOff size={24} color="#7E7B7B" />
+                  
+                                    ):( 
+                                    <Eye size={24} color="#7E7B7B" />)
+                                  }
                 </TouchableOpacity>
               </View>
               {errors.password && (
@@ -208,13 +215,13 @@ export default function App() {
 
             {/* Confirm Password */}
             <View>
-              <Text className="text-lg text-[#2C3E50] mb-2">
+              <Text className="text-lg text-headingColor mb-2">
                 Confirm Password
               </Text>
-              <View className="flex-row items-center border border-[#1ABC9C] h-12 rounded-lg px-2.5 relative">
+              <View className="flex-row items-center border border-actionColor h-12 rounded-lg px-2.5 relative">
                 <TextInput
                   secureTextEntry={!showConfirmPassword}
-                  className="flex-1 text-[#2C3E50]"
+                  className="flex-1 text-headingColor"
                   placeholder="Confirm your password"
                   placeholderTextColor="#7E7B7B"
                   value={formData.confirmPassword}
@@ -226,11 +233,17 @@ export default function App() {
                   className="absolute right-3 p-1"
                   onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                 >
-                  <FontAwesome
+                  {/* <FontAwesome
                     name={showConfirmPassword ? "eye" : "eye-slash"}
                     size={24}
                     color="#7E7B7B"
-                  />
+                  /> */}
+                  {showPassword ? 
+                    (<EyeOff size={24} color="#7E7B7B" />
+  
+                    ):( 
+                    <Eye size={24} color="#7E7B7B" />)
+                  }
                 </TouchableOpacity>
               </View>
               {errors.confirmPassword && (
@@ -240,37 +253,6 @@ export default function App() {
               )}
             </View>
           </View>
-
-            {/* Role Selection */}
-            <View>
-              <Text className="text-lg mt-4 text-[#2C3E50] mb-2">Select Role</Text>
-              <View className="flex-row justify-around">
-                {roles.map((role) => (
-                  <TouchableOpacity
-                    key={role.value}
-                    className={`py-2 px-4 rounded-full ${
-                      formData.role === role.value
-                        ? "bg-[#1ABC9C]"
-                        : "border border-[#1ABC9C]"
-                    }`}
-                    onPress={() => handleInputChange("role", role.value)}
-                  >
-                    <Text
-                      className={`${
-                        formData.role === role.value
-                          ? "text-white"
-                          : "text-[#1ABC9C]"
-                      } font-semibold text-sm`}
-                    >
-                      {role.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-              {errors.role && (
-                <Text className="text-red-500 text-sm mt-1">{errors.role}</Text>
-              )}
-            </View>
 
           {/* Create Account Button */}
           <TouchableOpacity
@@ -288,16 +270,17 @@ export default function App() {
           </TouchableOpacity>
 
           {/* OR Separator */}
-          <View className="flex-row items-center gap-2.5 mt-7">
-            <View className="border-t border-[#2C3E50] flex-1"></View>
-            <Text className="text-lg font-medium text-[#2C3E50]">OR</Text>
-            <View className="border-t border-[#2C3E50] flex-1"></View>
-          </View>
+          {/* <View className="flex-row items-center gap-2.5 mt-7">
+            <View className="border-t border-headingColor flex-1"></View>
+            <Text className="text-lg font-medium text-headingColor">OR</Text>
+            <View className="border-t border-headingColor flex-1"></View>
+          </View> 
+          */}
         </View>
 
         {/* Bottom Sign In link */}
         <View className="flex-row justify-center mb-8">
-          <Text className="text-lg text-[#2C3E50]">Have an account?</Text>
+          <Text className="text-lg text-headingColor">Have an account?</Text>
           <TouchableOpacity onPress={() =>   router.push("/sign")}>
             <Text className="text-lg text-[#2B876E] font-semibold ml-1">
               Sign In
@@ -312,7 +295,7 @@ export default function App() {
           visible={isModalVisible}
           onRequestClose={() => setIsModalVisible(false)}
         >
-          <View className="flex-1 items-center bg-black bg-opacity-50">
+          <View className="flex-1 items-center bg-black/50">
             <View
               className={`p-5 rounded-lg shadow-lg mt-20 ${isSuccess ? "bg-green-500" : "bg-red-500"}`}
             >

@@ -184,7 +184,7 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
             {activeTab === "overview" && (
               <View>
                 <Text className="text-lg font-bold mb-4 text-[#2C3E50]">
-                  What You'll Learn
+                  What You&apos;ll Learn
                 </Text>
                 {course.tags.map((tag, index) => (
                   <View key={index} className="flex-row items-center mb-2">

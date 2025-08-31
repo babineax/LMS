@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { validateEmail, getAuthErrorMessage } from "@/utils/validation";
@@ -128,20 +129,20 @@ export default function Index() {
       setTimeout(() => {
         switch (userData.role) {
           case "admin":
-            router.replace("(admin");
+            router.replace("/(admin)");
             break;
           case "teacher":
-            router.replace("/teacher/dashboard");
+            router.replace("/(teacher)");
             break;
           case "student":
-            router.replace("/(student)/courses");
+            router.replace("/(student)");
             break;
           default:
             setErrorMessage("Unrecognized user role: " + userData.role);
             break;
         }
       }, 2000);
-    } catch (error) {
+    } catch (error:any) {
       console.error("Unexpected error:", error);
       setErrorMessage("An unexpected error occurred: " + error.message);
     } finally {
@@ -151,31 +152,28 @@ export default function Index() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex-1 p-5 bg-[#F1FFF8] relative">
-        <View className="flex-row p-5 justify-between mb-5 mt-3">
+      <SafeAreaView className="flex-1 p-10 bg-[#F1FFF8]">
+        <View className="flex-row mb-5 mt-3">
           <TouchableOpacity onPress={() => router.push("/")}>
             <Ionicons name="arrow-back" size={25} color="black" />
           </TouchableOpacity>
         </View>
 
-        <View className="p-5">
-          <Text className="text-4xl text-[#2C3E50] font-bold">
-            Welcome Back to
+        <View className="justify-center align-center gap-4">
+          <Text className="text-3xl text-headingColor font-bold">
+            Welcome Back
           </Text>
-          <Text className="text-4xl text-[#2C3E50] font-bold">
-            Your Account
-          </Text>
-          <Text className="text-xs text-[#2C3E50]">
+          {/* <Text className="text-base text-headingColor">
             Enter your email and password to get started.
-          </Text>
+          </Text> */}
         </View>
 
-        <View className="mt-11 p-5">
+        <View className="mt-11">
           <View>
             <Text className="text-lg text-[#2C3E50] mb-2">Email</Text>
             <TextInput
               keyboardType="email-address"
-              className="border border-[#1ABC9C] rounded-lg h-12 px-2.5"
+              className="border border-border rounded-lg h-12 px-2.5"
               placeholder="Enter your Email"
               placeholderTextColor="#7E7B7B"
               value={formData.email}
@@ -189,7 +187,7 @@ export default function Index() {
 
           <View className="mt-5">
             <Text className="text-lg text-[#2C3E50] mb-2">Password</Text>
-            <View className="flex-row border border-[#1ABC9C] items-center h-12 rounded-lg px-2.5">
+            <View className="flex-row border border-border items-center h-12 rounded-lg px-2.5">
               <TextInput
                 className="flex-1"
                 placeholder="Enter your password"
@@ -199,11 +197,17 @@ export default function Index() {
                 onChangeText={(value) => handleInputChange("password", value)}
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <FontAwesome
+                {/* <FontAwesome
                   name={showPassword ? "eye" : "eye-slash"}
                   size={24}
                   color="#7E7B7B"
-                />
+                /> */}
+                {showPassword ? 
+                  (<EyeOff size={24} color="#7E7B7B" />
+
+                  ):( 
+                  <Eye size={24} color="#7E7B7B" />)
+                }
               </TouchableOpacity>
             </View>
             {errors.password && (
@@ -220,7 +224,7 @@ export default function Index() {
           </TouchableOpacity>
         </View>
 
-        <View className="px-5">
+        <View className="">
           {errorMessage && (
             <View className="bg-red-50 border border-red-200 rounded-lg p-3 mt-2">
               <Text className="text-red-600 text-sm text-center">
@@ -242,11 +246,11 @@ export default function Index() {
           </TouchableOpacity>
         </View>
 
-        <View className="flex-row items-center gap-2.5 mt-7 px-5">
+        {/* <View className="flex-row items-center gap-2.5 mt-7 px-5">
           <View className="border-t border-[#2C3E50] flex-1"></View>
           <Text className="text-lg font-medium text-[#2C3E50]">OR</Text>
           <View className="border-t border-[#2C3E50] flex-1"></View>
-        </View>
+        </View> */}
 
         <View className="flex-row absolute bottom-8 left-0 right-0 justify-center">
           <Text className="text-base text-[#2C3E50]">
@@ -265,7 +269,7 @@ export default function Index() {
           visible={isModalVisible}
           onRequestClose={() => setIsModalVisible(false)}
         >
-          <View className="flex-1 items-center bg-black bg-opacity-50">
+          <View className="flex-1 items-center bg-black/50">
             <View
               className={`p-5 rounded-lg shadow-lg mt-20 ${
                 isSuccess ? "bg-green-500" : "bg-red-500"
