@@ -12,7 +12,7 @@ async function sendEmail(to: string, subject: string, html: string) {
     },
     body: JSON.stringify({
       personalizations: [{ to: [{ email: to }] }],
-      from: { email: "noreply@yourapp.com", name: "Your School" },
+      from: { email: "suiteivy036@gmail.com", name: "Suite ivy" },
       subject,
       content: [{ type: "text/html", value: html }],
     }),
