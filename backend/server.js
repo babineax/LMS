@@ -45,6 +45,7 @@ app.use("/api/institutions", institutionRoutes);
 app.use("/api/library", libraryRoutes);
 app.use("/api/bursary", bursaryRoutes);
 app.use("/api/content", contentRoutes);
+app.use("/api/reports", require("./routes/reports"));
 
 // test route
 app.use("/api/notify", require("./routes/notifications"));
