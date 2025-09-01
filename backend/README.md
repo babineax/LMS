@@ -218,6 +218,7 @@ Authorization: Bearer <JWT>
 Authorization: Bearer <JWT>
 ```
 
+**Example Response:**
 **Body (JSON):**
 
 ```json
@@ -291,6 +292,7 @@ Authorization: Bearer <JWT>
 Authorization: Bearer <JWT>
 ```
 
+**Example Response:**
 **Body (JSON):**
 
 ```json
@@ -316,6 +318,148 @@ Authorization: Bearer <JWT>
 - **400** – Bad request
 
 - **401** – Unauthorized
+
+---
+
+---
+
+## 📊 Reports
+
+### 🔐 Create Report (`POST /reports`)
+
+**Headers:**
+
+```
+Authorization: Bearer <JWT>
+```
+
+**Body (JSON):**
+
+```json
+{
+  "title": "Midterm Report",
+  "description": "Performance analysis for students",
+  "institution_id": "uuid_of_institution",
+  "course_id": "uuid_of_course",
+  "student_id": "uuid_of_student",
+  "grade": "B",
+  "remarks": "Needs improvement in assignments"
+}
+```
+
+**Responses:**
+
+- **201** – Report created successfully
+
+- **400** – Bad request, Missing fields
+
+- **401** – Unauthorized, Invalid token
+- **500** – Internal server Error
+
+### 🔐 List Reports (`GET /reports`)
+
+```
+Authorization: Bearer <JWT>
+```
+
+#### Query Params (optional):
+
+- **institution_id** → filter by institution
+
+- **course_id** → filter by course
+
+- **student_id** → filter by student
+
+**Example Response:**
+**Body (JSON):**
+
+```json
+[
+  {
+    "id": "rep-123",
+    "title": "Midterm Report",
+    "student_id": "uuid",
+    "grade": "B",
+    "created_at": "2025-09-01T10:20:30Z"
+  }
+]
+```
+
+**Responses:**
+
+- **200** – ok
+
+- **400** – Bad request, Missing fields
+
+- **401** – Unauthorized, Invalid token
+- **500** – Internal server Error
+
+### 🔐 Get Report by ID (`GET /reports/:id`)
+
+```
+Authorization: Bearer <JWT>
+```
+
+**Example Response:**
+**Body (JSON):**
+
+```json
+{
+  "id": "rep-123",
+  "title": "Midterm Report",
+  "description": "Performance analysis for students",
+  "institution_id": "uuid",
+  "course_id": "uuid",
+  "student_id": "uuid",
+  "grade": "B",
+  "remarks": "Needs improvement in assignments",
+  "created_at": "2025-09-01T10:20:30Z"
+}
+```
+
+**Responses:**
+
+- **200** – ok
+- **400** – Bad request, Missing fields
+- **401** – Unauthorized, Invalid token
+- **404** – Report not found
+- **500** – Internal server Error
+
+### 🔐 Update Report (`PUT /reports/:id`)
+
+```
+Authorization: Bearer <JWT>
+```
+
+**Body (JSON):**
+
+```json
+{
+  "grade": "A",
+  "remarks": "Great improvement!"
+}
+```
+
+**Responses:**
+
+- **200** – OK. Report updated
+- **400** – Bad request, Missing fields, Invalid body
+- **401** – Unauthorized, Invalid token
+- **404** – Report not found
+- **500** – Internal server Error
+
+### 🔐 Update Report (`DELETE /reports/:id`)
+
+```
+Authorization: Bearer <JWT>
+```
+
+**Responses:**
+
+- **200** – OK. Report deleted
+- **401** – Unauthorized, Invalid token
+- **404** – Report not found
+- **500** – Internal server Error
 
 ---
 
