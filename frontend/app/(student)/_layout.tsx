@@ -60,7 +60,8 @@ export default function StudentLayout() {
                     title: "Grades",
                     tabBarIcon: ({ size, color }: TabBarIconProps) => (
                         <Star size={size} color={color} />
-                    ),   
+                    ),
+                    
                 }
             }
         />

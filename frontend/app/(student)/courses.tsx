@@ -6,7 +6,6 @@ import { useState } from "react";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useAuth } from "@/contexts/AuthContext";
-
 export const mockCourses: Course[] = [
     {
       id: "1",
