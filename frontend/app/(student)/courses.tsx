@@ -5,12 +5,9 @@ import { Course } from "@/types/types";
 import { useState } from "react";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { useAuth } from "@/contexts/AuthContext";
 
-export default function Courses() {
-  const [currentView, setCurrentView] = useState<"list" | "details">("list");
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-
-  const mockCourses: Course[] = [
+export const mockCourses: Course[] = [
     {
       id: "1",
       title: "Introduction to Mathematics",
@@ -34,7 +31,7 @@ export default function Courses() {
           id: "1",
           title: "Numbers and Operations",
           duration: "15 min",
-          isCompleted: false,
+          isCompleted: true,
           isLocked: false,
           type: "video",
         },
@@ -284,17 +281,24 @@ export default function Courses() {
     },
   ];
 
+
+export default function Courses() {
+  const [currentView, setCurrentView] = useState<"list" | "details">("list");
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const { addCourse, removeCourse } = useAuth();
+  
   const handleCoursePress = (course: Course) => {
     setSelectedCourse(course);
     setCurrentView("details");
   };
 
   const handleEnroll = () => {
+    addCourse(selectedCourse!)
     console.log("Enrolling in course:", selectedCourse?.title);
   };
 
   return (
-    <View className="flex-1 bg-[#F1FFF8]">
+    <View className="flex-1 bg-bgLight">
       <ScrollView className="flex-grow px-6 pt-12 pb-6">
         {currentView === "list" ? (
           <CourseList

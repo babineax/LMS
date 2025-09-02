@@ -132,17 +132,17 @@ export default function Index() {
             router.replace("/(admin)");
             break;
           case "teacher":
-            router.replace("/(teacher)");
+            router.replace("/(teacher)/teacher");
             break;
           case "student":
-            router.replace("/(student)");
+            router.replace("/(student)/courses");
             break;
           default:
             setErrorMessage("Unrecognized user role: " + userData.role);
             break;
         }
       }, 2000);
-    } catch (error:any) {
+    } catch (error) {
       console.error("Unexpected error:", error);
       setErrorMessage("An unexpected error occurred: " + error.message);
     } finally {
@@ -152,28 +152,31 @@ export default function Index() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex-1 p-10 bg-[#F1FFF8]">
-        <View className="flex-row mb-5 mt-3">
+      <SafeAreaView className="flex-1 p-5 bg-bgLight relative">
+        <View className="flex-row p-5 justify-between mb-5 mt-3">
           <TouchableOpacity onPress={() => router.push("/")}>
             <Ionicons name="arrow-back" size={25} color="black" />
           </TouchableOpacity>
         </View>
 
-        <View className="justify-center align-center gap-4">
-          <Text className="text-3xl text-headingColor font-bold">
-            Welcome Back
+        <View className="px-5">
+          <Text className="text-3xl text-[#2C3E50] font-bold">
+            Welcome Back to Your Account
           </Text>
-          {/* <Text className="text-base text-headingColor">
-            Enter your email and password to get started.
+          {/* <Text className="text-4xl text-[#2C3E50] font-bold">
+            Your Account
           </Text> */}
+          <Text className="text-xs text-[#2C3E50]">
+            Enter your email and password to get started.
+          </Text>
         </View>
 
-        <View className="mt-11">
+        <View className="mt-6 p-5">
           <View>
             <Text className="text-lg text-[#2C3E50] mb-2">Email</Text>
             <TextInput
               keyboardType="email-address"
-              className="border border-border rounded-lg h-12 px-2.5"
+              className="border border-[#1ABC9C] rounded-lg h-12 px-2.5"
               placeholder="Enter your Email"
               placeholderTextColor="#7E7B7B"
               value={formData.email}
@@ -187,7 +190,7 @@ export default function Index() {
 
           <View className="mt-5">
             <Text className="text-lg text-[#2C3E50] mb-2">Password</Text>
-            <View className="flex-row border border-border items-center h-12 rounded-lg px-2.5">
+            <View className="flex-row border border-[#1ABC9C] items-center h-12 rounded-lg px-2.5">
               <TextInput
                 className="flex-1"
                 placeholder="Enter your password"
@@ -197,11 +200,6 @@ export default function Index() {
                 onChangeText={(value) => handleInputChange("password", value)}
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                {/* <FontAwesome
-                  name={showPassword ? "eye" : "eye-slash"}
-                  size={24}
-                  color="#7E7B7B"
-                /> */}
                 {showPassword ? 
                   (<EyeOff size={24} color="#7E7B7B" />
 
@@ -224,7 +222,7 @@ export default function Index() {
           </TouchableOpacity>
         </View>
 
-        <View className="">
+        <View className="px-5">
           {errorMessage && (
             <View className="bg-red-50 border border-red-200 rounded-lg p-3 mt-2">
               <Text className="text-red-600 text-sm text-center">

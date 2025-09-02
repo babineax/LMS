@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router";
-import { BookOpen, Building, Settings2Icon, Star } from "lucide-react-native";
+import { BookOpen, Building, Settings, Star } from "lucide-react-native";
 
 type TabBarIconProps = {
   size: number;
@@ -60,7 +60,7 @@ export default function StudentLayout() {
                     title: "Grades",
                     tabBarIcon: ({ size, color }: TabBarIconProps) => (
                         <Star size={size} color={color} />
-                    ),
+                    ),   
                 }
             }
         />
@@ -70,7 +70,7 @@ export default function StudentLayout() {
                 {
                     title: "Settings",
                     tabBarIcon: ({ size, color }: TabBarIconProps) => (
-                        <Settings2Icon size={size} color={color} />
+                        <Settings size={size} color={color} />
                     ),
                 }
             }

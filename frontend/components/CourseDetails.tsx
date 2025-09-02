@@ -68,7 +68,7 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
   );
 
   return (
-    <View className="flex-1 bg-[#F1FFF8]">
+    <View className="flex-1 bg-bgLight">
       {/* Header */}
       <View className="bg-white px-6 pt-12 pb-4 shadow-sm">
         <TouchableOpacity onPress={onBack} className="mb-4">
