@@ -17,6 +17,7 @@ export interface BookValidationResult {
   errors: string[];
 }
 
+
 export interface BorrowValidationResult {
   isValid: boolean;
   errors: string[];
