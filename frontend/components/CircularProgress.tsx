@@ -76,7 +76,7 @@ export default function CircularProgress({
             alignItems: 'center',
           }}
         >
-          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{progress}%</Text>
+          <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{Math.round(progress)}%</Text>
         </View>
       )}
     </View>

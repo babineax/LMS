@@ -1,11 +1,14 @@
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemList } from '@react-navigation/drawer';
-import StudentProfile from "./StudentProfile";
-import StudentSettings from "./StudentSettings";
-import StudentHelp from "./StudentHelp";
+import StudentProfile from "../app/StudentProfile";
+import StudentSettings from "../app/StudentSettings";
+import StudentHelp from "../app/StudentHelp";
 import { UserCircle, Settings, HelpCircle, LogOut } from "lucide-react-native";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Drawer = createDrawerNavigator();
 export default function StudentSettingsDrawer() {
+    const { signOut } = useAuth();
+
     return (
         <Drawer.Navigator
             initialRouteName="Profile"
@@ -22,12 +25,20 @@ export default function StudentSettingsDrawer() {
                 </DrawerContentScrollView>
             )}
             screenOptions={{
-                headerShown: false,
+                headerShown: true,
                 drawerActiveTintColor: "#A1EBE5",
                 drawerInactiveTintColor:"#2C3E50",
+                headerTitleStyle: {
+                    fontSize: 16,
+                    fontWeight: '500',
+                },
+                headerStyle: {
+                    backgroundColor: "#A1EBE5", 
+                    shadowColor: "#A1EBE5",
+                },
                 drawerStyle: {
-                    width: 200,
-                    backgroundColor: "#128C7E",
+                    width: 250,
+                    backgroundColor: "#128C7E",    
                 },
                 drawerLabelStyle: {
                     fontSize: 16,
