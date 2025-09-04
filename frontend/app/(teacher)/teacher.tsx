@@ -138,11 +138,11 @@ const TeachersDashboard: React.FC = () => {
   ];
 
   return (
-    <SafeAreaView className="flex-1 bg-bgLight">
+    <SafeAreaView className="flex-1 bg-[#F1FFF8]">
       <StatusBar barStyle="dark-content" backgroundColor="#F1FFF8" />
 
       {/* Header */}
-      <View className="my-6 px-6 py-4 pb-2">
+      <View className="px-6 pt-4 pb-2">
         <Text className="text-2xl font-bold text-[#2C3E50] mb-1">
           Teachers Dashboard
         </Text>
@@ -233,7 +233,7 @@ const TeachersDashboard: React.FC = () => {
               </Text>
               <TouchableOpacity
                 className="bg-[#1ABC9C] px-4 py-2 rounded-lg flex-row items-center"
-                onPress={() => router.push("/(admin)/CreateCourse")}
+                onPress={() => router.push("(admin)/CreateCourse")}
               >
                 <Ionicons name="add" size={16} color="white" />
                 <Text className="text-white font-medium ml-1 text-sm">
