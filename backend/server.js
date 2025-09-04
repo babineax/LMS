@@ -7,6 +7,7 @@ const institutionRoutes = require("./routes/institution.route");
 const libraryRoutes = require("./routes/library.route");
 const bursaryRoutes = require("./routes/bursary.route");
 const morgan = require("morgan");
+const contentRoutes = require("./routes/content.routes");
 
 const app = express();
 app.use(express.json());
@@ -43,6 +44,11 @@ app.use("/api/courses", courseRoutes);
 app.use("/api/institutions", institutionRoutes);
 app.use("/api/library", libraryRoutes);
 app.use("/api/bursary", bursaryRoutes);
+app.use("/api/content", contentRoutes);
+app.use("/api/reports", require("./routes/reports"));
+
+// test route
+app.use("/api/notify", require("./routes/notifications"));
 
 // health check
 app.get("/", (req, res) => {
