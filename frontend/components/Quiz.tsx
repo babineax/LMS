@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
 interface QuestionProps {
@@ -45,13 +44,20 @@ export default function MultipleChoiceQuestion({
           }
 
             return (
-              <TouchableOpacity
-                key={i}
-                className={`p-3 my-1 rounded-xl border ${bg}`}
-                onPress={() => !submitted && onSelect(index, option)}
-              >
-                <Text>{option}</Text>
-              </TouchableOpacity>
+              <View key={i}>
+                {submitted && selectedAnswer !== correctAnswer && option === correctAnswer && (
+                  <Text className="text-sm font-medium text-primaryColor mb-1">
+                    Correct Answer:
+                  </Text>
+                )}
+                <TouchableOpacity
+                  
+                  className={`p-3 my-1 rounded-xl border ${bg}`}
+                  onPress={() => !submitted && onSelect(index, option)}
+                >
+                  <Text>{option}</Text>
+                </TouchableOpacity>
+              </View>
             );
         })}
         

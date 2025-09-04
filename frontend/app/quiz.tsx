@@ -1,8 +1,9 @@
 import { View, ScrollView, Text, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MultipleChoiceQuestion from "@/components/Quiz";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
+import { parseDuration } from "@/utils/parseFunction";
 
 const questions = [
     {
@@ -38,6 +39,8 @@ export default function Quiz() {
 
     const course = courses.find((c) => c.id === courseId);
     const lesson = course?.lessons.find((l) => l.id === lessonId);
+    const initialDuration = parseDuration(lesson?.duration);
+    const [timeLeft, setTimeLeft] = useState(initialDuration);
 
     const perPage = 3;
     const start = page * perPage;
@@ -47,6 +50,21 @@ export default function Quiz() {
     const handleSelect = (index: number, option: string) => {
       setAnswers((prev) => ({ ...prev, [index]: option }));
     };
+
+    useEffect(() => {
+      if (timeLeft <= 0) {
+        handleSubmitQuiz();
+        return;
+      }
+
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(timer);
+
+      //eslint-disable-next-line
+    }, [timeLeft]);
 
     const handleSubmitQuiz = () => {
       let newScore = 0;
@@ -59,6 +77,22 @@ export default function Quiz() {
       setSubmitted(true);
     };
 
+    const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  };
+
+  if (!lesson) {
+    return (
+      <View className="flex-1 justify-center items-center">
+        <Text className="text-headingColor font-semibold text-lg mb-3">
+          Lesson Not Found
+        </Text>
+      </View>
+    );
+  }
+
 
   return (
     <View className="flex-1 bg-bgMain">
@@ -66,6 +100,11 @@ export default function Quiz() {
         <Text className="text-headingColor font-semibold text-lg mb-3">
           {lesson?.title}
         </Text>
+        <View className="items-center mb-4">
+          <Text className={`font-semibold text-lg ${timeLeft <= 60 ? "text-red-600" : "text-primaryColor "}`}>
+            Time left: {formatTime(timeLeft)}
+          </Text>
+        </View>
         {currentQuestions.map((question, idx) => (
           <MultipleChoiceQuestion
             key={start + idx}
@@ -82,7 +121,7 @@ export default function Quiz() {
           {page > 0 && (
             <TouchableOpacity
               onPress={() => setPage(page - 1)}
-              className="p-3 bg-gray-300 rounded-xl"
+              className="px-10 py-3 bg-gray-300 rounded-lg"
             >
               <Text>Previous</Text>
             </TouchableOpacity>
@@ -91,7 +130,7 @@ export default function Quiz() {
           {end < questions.length ? (
             <TouchableOpacity
               onPress={() => setPage(page + 1)}
-              className="p-3 bg-primaryColor rounded-xl"
+              className="px-10 py-3 bg-primaryColor rounded-lg"
             >
               <Text className="text-white">Next</Text>
             </TouchableOpacity>
@@ -99,8 +138,8 @@ export default function Quiz() {
             <TouchableOpacity
               onPress={handleSubmitQuiz}
               disabled={submitted}
-              className={`p-3 rounded-xl ${
-                submitted ? "bg-gray-300" : "bg-green-600"
+              className={`px-10 py-3 rounded-lg ${
+                submitted ? "bg-gray-300" : "bg-primaryColor"
               }`}
             >
               <Text className="text-white font-bold">Submit Quiz</Text>
@@ -112,12 +151,12 @@ export default function Quiz() {
               <Text className="mt-4 text-center font-bold text-lg">
               Final Score: {score}/{questions.length}
             </Text>
-            <View>
+            <View className="mt-4">
               <TouchableOpacity
                 onPress={() => router.push("/(student)/grades")}
-                className="p-4 bg-primaryColor rounded-xl"
+                className="px-10 py-3 bg-primaryColor rounded-xl"
               >
-                <Text className="text-center text-lg">
+                <Text className="text-white text-center text-lg">
                   View Scores
                 </Text>
               </TouchableOpacity>
