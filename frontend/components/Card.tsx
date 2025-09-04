@@ -1,5 +1,5 @@
 import { View, TouchableOpacity} from "react-native";
-import clsx from "clsx";
+import { clsx } from "clsx";
 
 interface CardProps {
     children: React.ReactNode;

@@ -7,7 +7,7 @@ import {
   Modal,
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import {  Ionicons } from "@expo/vector-icons";
 import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -142,7 +142,7 @@ export default function Index() {
             break;
         }
       }, 2000);
-    } catch (error) {
+    } catch (error:any) {
       console.error("Unexpected error:", error);
       setErrorMessage("An unexpected error occurred: " + error.message);
     } finally {
@@ -232,7 +232,7 @@ export default function Index() {
           )}
 
           <TouchableOpacity
-            className="bg-[#2B876E] h-[53px] rounded-lg mt-6 flex justify-center items-center shadow-md"
+            className="bg-[#2B876E] py-3 rounded-lg mt-6 flex justify-center items-center shadow-md"
             onPress={onSubmit}
             disabled={isLoading}
           >

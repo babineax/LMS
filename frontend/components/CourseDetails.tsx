@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Course, Lesson } from "@/types/types";
+import { router } from "expo-router";
 
 interface CourseDetailsProps {
   course: Course;
@@ -18,12 +19,20 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
     "overview" | "lessons" | "reviews"
   >("overview");
 
+  const viewLesson = (lesson: Lesson, courseId: string) => {
+    if (lesson.type === "quiz" && !lesson.isLocked) {
+      router.push(`/quiz?courseId=${courseId}&lessonId=${lesson.id}`);
+    }
+  };
+
   const LessonItem: React.FC<{ lesson: Lesson; index: number }> = ({
     lesson,
     index,
   }) => (
     <View className="flex-row items-center p-4 border-b border-gray-100">
-      <View
+      <TouchableOpacity
+        onPress={() => viewLesson(lesson, course.id)}
+        disabled={lesson.isLocked || lesson.isCompleted}
         className={`w-8 h-8 rounded-full items-center justify-center mr-3 ${
           lesson.isCompleted
             ? "bg-[#1ABC9C]"
@@ -39,7 +48,7 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
         ) : (
           <Text className="text-xs font-bold text-[#2C3E50]">{index + 1}</Text>
         )}
-      </View>
+      </TouchableOpacity>
 
       <View className="flex-1">
         <Text

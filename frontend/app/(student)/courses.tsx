@@ -24,7 +24,7 @@ export const mockCourses: Course[] = [
       image:
         "https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?w=400",
       tags: ["Basic arithmetic", "Problem solving", "Number theory"],
-      isEnrolled: false,
+      isEnrolled: true,
       lessons: [
         {
           id: "1",
@@ -38,7 +38,7 @@ export const mockCourses: Course[] = [
           id: "2",
           title: "Basic Addition",
           duration: "20 min",
-          isCompleted: false,
+          isCompleted: true,
           isLocked: false,
           type: "video",
         },
@@ -47,7 +47,7 @@ export const mockCourses: Course[] = [
           title: "Practice Quiz",
           duration: "10 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: false,
           type: "quiz",
         },
       ],
@@ -284,7 +284,7 @@ export const mockCourses: Course[] = [
 export default function Courses() {
   const [currentView, setCurrentView] = useState<"list" | "details">("list");
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-  const { addCourse, removeCourse } = useAuth();
+  const { addCourse } = useAuth();
   
   const handleCoursePress = (course: Course) => {
     setSelectedCourse(course);

@@ -2,8 +2,7 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItem, DrawerItemL
 import StudentProfile from "../app/StudentProfile";
 import StudentSettings from "../app/StudentSettings";
 import StudentHelp from "../app/StudentHelp";
-import { UserCircle, Settings, HelpCircle, LogOut, Menu } from "lucide-react-native";
-import { View } from "react-native";
+import { UserCircle, Settings, HelpCircle, LogOut } from "lucide-react-native";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Drawer = createDrawerNavigator();

@@ -274,7 +274,7 @@ export default function App() {
 
           {/* Create Account Button */}
           <TouchableOpacity
-            className="bg-[#2B876E] p-5 h-[53px] rounded-lg mt-6 flex justify-center items-center w-full shadow-md"
+            className="bg-[#2B876E] px-5 py-3 rounded-lg mt-6 flex justify-center items-center w-full shadow-md"
             onPress={onSubmit}
             disabled={isLoading}
           >
@@ -288,11 +288,11 @@ export default function App() {
           </TouchableOpacity>
 
           {/* OR Separator */}
-          <View className="flex-row items-center gap-2.5 mt-7">
+          {/* <View className="flex-row items-center gap-2.5 mt-7">
             <View className="border-t border-[#2C3E50] flex-1"></View>
             <Text className="text-lg font-medium text-[#2C3E50]">OR</Text>
             <View className="border-t border-[#2C3E50] flex-1"></View>
-          </View>
+          </View> */}
         </View>
 
         {/* Bottom Sign In link */}
