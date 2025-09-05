@@ -5,12 +5,8 @@ import { Course } from "@/types/types";
 import { useState } from "react";
 import { View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-
-export default function Courses() {
-  const [currentView, setCurrentView] = useState<"list" | "details">("list");
-  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
-
-  const mockCourses: Course[] = [
+import { useAuth } from "@/contexts/AuthContext";
+export const mockCourses: Course[] = [
     {
       id: "1",
       title: "Introduction to Mathematics",
@@ -28,13 +24,13 @@ export default function Courses() {
       image:
         "https://images.unsplash.com/photo-1509228627152-72ae9ae6848d?w=400",
       tags: ["Basic arithmetic", "Problem solving", "Number theory"],
-      isEnrolled: false,
+      isEnrolled: true,
       lessons: [
         {
           id: "1",
           title: "Numbers and Operations",
           duration: "15 min",
-          isCompleted: false,
+          isCompleted: true,
           isLocked: false,
           type: "video",
         },
@@ -42,7 +38,7 @@ export default function Courses() {
           id: "2",
           title: "Basic Addition",
           duration: "20 min",
-          isCompleted: false,
+          isCompleted: true,
           isLocked: false,
           type: "video",
         },
@@ -51,7 +47,7 @@ export default function Courses() {
           title: "Practice Quiz",
           duration: "10 min",
           isCompleted: false,
-          isLocked: true,
+          isLocked: false,
           type: "quiz",
         },
       ],
@@ -284,17 +280,24 @@ export default function Courses() {
     },
   ];
 
+
+export default function Courses() {
+  const [currentView, setCurrentView] = useState<"list" | "details">("list");
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+  const { addCourse } = useAuth();
+  
   const handleCoursePress = (course: Course) => {
     setSelectedCourse(course);
     setCurrentView("details");
   };
 
   const handleEnroll = () => {
+    addCourse(selectedCourse!)
     console.log("Enrolling in course:", selectedCourse?.title);
   };
 
   return (
-    <View className="flex-1 bg-[#F1FFF8]">
+    <View className="flex-1 bg-bgLight">
       <ScrollView className="flex-grow px-6 pt-12 pb-6">
         {currentView === "list" ? (
           <CourseList

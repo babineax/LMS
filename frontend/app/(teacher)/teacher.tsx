@@ -147,7 +147,7 @@ const TeachersDashboard: React.FC = () => {
           Teachers Dashboard
         </Text>
         <Text className="text-gray-600 text-sm">
-          Welcome back! Here's what's happening with your courses.
+          Welcome back! Here&apos;s what&apos;s happening with your courses.
         </Text>
       </View>
 

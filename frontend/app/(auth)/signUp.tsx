@@ -124,7 +124,7 @@ export default function App() {
   return (
     // Entire app wrapped inside SafeAreaProvider and SafeAreaView to prevent UI overlap with device notches.
     <SafeAreaProvider>
-      <SafeAreaView className="flex-1 bg-[#F1FFF8] font-sans">
+      <SafeAreaView className="flex-1 bg-bgLight font-sans">
         <View className="flex-1 p-10">
           <View className="flex-row justify-between mb-5 mt-3">
             <TouchableOpacity onPress={() => router.push("/")}>
@@ -274,7 +274,7 @@ export default function App() {
 
           {/* Create Account Button */}
           <TouchableOpacity
-            className="bg-[#2B876E] p-5 h-[53px] rounded-lg mt-6 flex justify-center items-center w-full shadow-md"
+            className="bg-[#2B876E] px-5 py-3 rounded-lg mt-6 flex justify-center items-center w-full shadow-md"
             onPress={onSubmit}
             disabled={isLoading}
           >
@@ -288,11 +288,11 @@ export default function App() {
           </TouchableOpacity>
 
           {/* OR Separator */}
-          <View className="flex-row items-center gap-2.5 mt-7">
+          {/* <View className="flex-row items-center gap-2.5 mt-7">
             <View className="border-t border-[#2C3E50] flex-1"></View>
             <Text className="text-lg font-medium text-[#2C3E50]">OR</Text>
             <View className="border-t border-[#2C3E50] flex-1"></View>
-          </View>
+          </View> */}
         </View>
 
         {/* Bottom Sign In link */}
@@ -312,7 +312,7 @@ export default function App() {
           visible={isModalVisible}
           onRequestClose={() => setIsModalVisible(false)}
         >
-          <View className="flex-1 items-center bg-black bg-opacity-50">
+          <View className="flex-1 items-center bg-black/50">
             <View
               className={`p-5 rounded-lg shadow-lg mt-20 ${isSuccess ? "bg-green-500" : "bg-red-500"}`}
             >

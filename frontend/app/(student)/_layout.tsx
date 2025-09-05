@@ -1,5 +1,11 @@
 import { Tabs } from "expo-router";
 import { BookOpen, Building, Settings, Star } from "lucide-react-native";
+
+type TabBarIconProps = {
+  size: number;
+  color: string;
+};
+
 export default function StudentLayout() {
   return (
     <Tabs
@@ -30,7 +36,7 @@ export default function StudentLayout() {
             options={
                 {
                     title: "Home",
-                    tabBarIcon: ({ size, color }: { name: string; size?: number; color?: string }) => (
+                    tabBarIcon: ({ size, color }: TabBarIconProps) => (
                         <Building size={size} color={color} />
                     ),
                 }
@@ -41,7 +47,7 @@ export default function StudentLayout() {
             options={
                 {
                     title: "Courses",
-                    tabBarIcon: ({ size, color }: { name: string; size?: number; color?: string }) => (
+                    tabBarIcon: ({ size, color }: TabBarIconProps) => (
                         <BookOpen size={size} color={color} />
                     ),
                 }
@@ -52,9 +58,10 @@ export default function StudentLayout() {
             options={
                 {
                     title: "Grades",
-                    tabBarIcon: ({ size, color }: { name: string; size?: number; color?: string }) => (
+                    tabBarIcon: ({ size, color }: TabBarIconProps) => (
                         <Star size={size} color={color} />
                     ),
+                    
                 }
             }
         />
@@ -63,7 +70,7 @@ export default function StudentLayout() {
             options={
                 {
                     title: "Settings",
-                    tabBarIcon: ({ size, color }: { name: string; size?: number; color?: string }) => (
+                    tabBarIcon: ({ size, color }: TabBarIconProps) => (
                         <Settings size={size} color={color} />
                     ),
                 }
