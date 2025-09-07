@@ -115,7 +115,7 @@ const ProfileManagement = () => {
         <Text className="text-sm text-gray-500">Admin</Text>
       </View>
 
-      {/* Editable Fields */}
+      {/* Edit Fields */}
       <View className="mb-4">
         <Text className="text-sm font-medium text-gray-600 mb-1">
           Full Name
