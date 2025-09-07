@@ -41,15 +41,6 @@ export default function App() {
   // Form errors
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const roles: Array<{
-    label: string;
-    value: "admin" | "student" | "teacher";
-  }> = [
-    { label: "Admin", value: "admin" },
-    { label: "Teacher", value: "teacher" },
-    { label: "Student", value: "student" },
-  ];
-
   // Function to show a custom message modal
   const showMessage = (msg: string, success: boolean) => {
     setMessage(msg);
@@ -58,7 +49,7 @@ export default function App() {
     setTimeout(() => {
       setIsModalVisible(false);
       if (success) {
-         router.push("/sign");
+        router.push("/sign");
       }
     }, 2000);
   };
@@ -133,7 +124,9 @@ export default function App() {
           </View>
 
           {/* Title */}
-          <Text className="text-4xl text-[#2C3E50] font-bold">Create Your Account</Text>
+          <Text className="text-4xl text-[#2C3E50] font-bold">
+            Create Your Account
+          </Text>
           <Text className="text-xs text-[#2C3E50] mt-1">
             Enter your details to create an account.
           </Text>
@@ -241,37 +234,6 @@ export default function App() {
             </View>
           </View>
 
-            {/* Role Selection */}
-            <View>
-              <Text className="text-lg mt-4 text-[#2C3E50] mb-2">Select Role</Text>
-              <View className="flex-row justify-around">
-                {roles.map((role) => (
-                  <TouchableOpacity
-                    key={role.value}
-                    className={`py-2 px-4 rounded-full ${
-                      formData.role === role.value
-                        ? "bg-[#1ABC9C]"
-                        : "border border-[#1ABC9C]"
-                    }`}
-                    onPress={() => handleInputChange("role", role.value)}
-                  >
-                    <Text
-                      className={`${
-                        formData.role === role.value
-                          ? "text-white"
-                          : "text-[#1ABC9C]"
-                      } font-semibold text-sm`}
-                    >
-                      {role.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-              {errors.role && (
-                <Text className="text-red-500 text-sm mt-1">{errors.role}</Text>
-              )}
-            </View>
-
           {/* Create Account Button */}
           <TouchableOpacity
             className="bg-[#2B876E] px-5 py-3 rounded-lg mt-6 flex justify-center items-center w-full shadow-md"
@@ -286,19 +248,12 @@ export default function App() {
               </Text>
             )}
           </TouchableOpacity>
-
-          {/* OR Separator */}
-          {/* <View className="flex-row items-center gap-2.5 mt-7">
-            <View className="border-t border-[#2C3E50] flex-1"></View>
-            <Text className="text-lg font-medium text-[#2C3E50]">OR</Text>
-            <View className="border-t border-[#2C3E50] flex-1"></View>
-          </View> */}
         </View>
 
         {/* Bottom Sign In link */}
         <View className="flex-row justify-center mb-8">
           <Text className="text-lg text-[#2C3E50]">Have an account?</Text>
-          <TouchableOpacity onPress={() =>   router.push("/sign")}>
+          <TouchableOpacity onPress={() => router.push("/sign")}>
             <Text className="text-lg text-[#2B876E] font-semibold ml-1">
               Sign In
             </Text>
