@@ -42,15 +42,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     "overview" | "payments" | "payouts" | "fees"
   >("overview");
 
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) {
-      Alert.alert("Logout Failed", error.message);
-    } else {
-      router.replace("/(auth)/sign");
-    }
-  };
-
   const handleQuickActionPress = (actionId: string) => {
     switch (actionId) {
       case "add-user":
@@ -147,7 +138,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       <View className="p-4">
         <DashboardHeader
           onRefresh={onRefresh}
-          onLogout={handleLogout}
           activeSection={activeSection}
           onSectionChange={setActiveSection}
         />
