@@ -19,19 +19,27 @@ const ProfileManagement = () => {
   const [avatar, setAvatar] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  // Password states
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      if (user) setUserId(user.id);
+      if (user) {
+        setUserId(user.id);
+        setEmail(user.email ?? "");
+      }
     };
 
     fetchUser();
   }, []);
 
-  //upload image
+  // pick and upload image
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -83,6 +91,65 @@ const ProfileManagement = () => {
       alert("Upload failed.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // save profile changes
+  const handleSaveProfile = async () => {
+    if (!userId) return;
+    const { error } = await supabase
+      .from("users")
+      .update({ name, email, phone })
+      .eq("id", userId);
+
+    if (error) {
+      alert("Failed to update profile: " + error.message);
+    } else {
+      alert("Profile updated successfully!");
+    }
+  };
+
+  // handle password change with old password check
+  const handlePasswordChange = async () => {
+    if (!email) {
+      alert("Email not found for this user");
+      return;
+    }
+
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      alert("New passwords do not match!");
+      return;
+    }
+
+    // Re-authenticate with old password
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password: oldPassword,
+    });
+
+    if (signInError) {
+      alert("Old password is incorrect");
+      return;
+    }
+
+    // Update password
+    const { error: updateError } = await supabase.auth.updateUser({
+      password: newPassword,
+    });
+
+    if (updateError) {
+      alert("Failed to update password: " + updateError.message);
+    } else {
+      alert("Password updated successfully!");
+      setShowPasswordForm(false);
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
     }
   };
 
@@ -153,16 +220,60 @@ const ProfileManagement = () => {
         </View>
       </View>
 
-      {/* Change Password */}
-      <TouchableOpacity className="flex-row items-center p-4 border border-gray-200 rounded-lg mb-4">
+      {/* Change Password Toggle */}
+      <TouchableOpacity
+        className="flex-row items-center p-4 border border-gray-200 rounded-lg mb-4"
+        onPress={() => setShowPasswordForm(!showPasswordForm)}
+      >
         <Lock size={20} color="#128C7E" />
         <Text className="ml-2 text-base text-[#2C3E50]">Change Password</Text>
       </TouchableOpacity>
 
+      {showPasswordForm && (
+        <View className="mb-4 bg-gray-50 p-4 rounded-lg">
+          <Text className="text-sm font-medium text-gray-600 mb-1">
+            Old Password
+          </Text>
+          <TextInput
+            placeholder="....."
+            secureTextEntry
+            value={oldPassword}
+            onChangeText={setOldPassword}
+            className="border border-gray-300 rounded-lg px-3 py-2 mb-3"
+          />
+          <Text className="text-sm font-medium text-gray-600 mb-1">
+            New Password
+          </Text>
+          <TextInput
+            placeholder="......"
+            secureTextEntry
+            value={newPassword}
+            onChangeText={setNewPassword}
+            className="border border-gray-300 rounded-lg px-3 py-2 mb-3"
+          />
+          <Text className="text-sm font-medium text-gray-600 mb-1">
+            Confirm Password
+          </Text>
+          <TextInput
+            placeholder="......."
+            secureTextEntry
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            className="border border-gray-300 rounded-lg px-3 py-2 mb-3"
+          />
+          <TouchableOpacity
+            className="border border-[#128C7E] p-3 rounded-lg items-center"
+            onPress={handlePasswordChange}
+          >
+            <Text className="text-[#128C7E] font-medium">Update Password</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* Save Button */}
       <TouchableOpacity
         className="bg-[#128C7E] p-4 rounded-xl items-center"
-        onPress={() => console.log("Profile saved:", { name, email, phone })}
+        onPress={handleSaveProfile}
       >
         <Text className="text-white font-medium text-lg">Save Changes</Text>
       </TouchableOpacity>
