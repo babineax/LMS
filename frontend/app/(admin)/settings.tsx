@@ -14,41 +14,14 @@ import {
   Shield,
   Users,
   Settings,
-  Moon,
-  Globe,
-  Database,
   Mail,
 } from "lucide-react-native";
-interface SettingsSectionProps {
-  title: string;
-  children: React.ReactNode;
-}
-
-interface SettingsItemProps {
-  icon: React.ReactNode;
-  title: string;
-  subtitle?: string;
-  rightComponent?: React.ReactNode;
-  onPress?: () => void;
-  isLast?: boolean;
-}
-
-interface SwitchItemProps {
-  icon: React.ReactNode;
-  title: string;
-  subtitle?: string;
-  value: boolean;
-  onValueChange: (value: boolean) => void;
-  isLast?: boolean;
-}
-
-interface ChevronItemProps {
-  icon: React.ReactNode;
-  title: string;
-  subtitle?: string;
-  onPress?: () => void;
-  isLast?: boolean;
-}
+import {
+  ChevronItemProps,
+  SettingsItemProps,
+  SettingsSectionProps,
+  SwitchItemProps,
+} from "@/types/types";
 
 export default function SettingsUI() {
   const [notifications, setNotification] = useState<boolean>(true);
