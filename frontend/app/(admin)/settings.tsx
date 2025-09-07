@@ -148,7 +148,7 @@ export default function SettingsUI() {
             icon={<Users size={20} color="#128C7E" />}
             title="Profile Management"
             subtitle="Update your admin profile"
-            onPress={() => console.log("Profile pressed")}
+            onPress={() => router.push("/Configuration/ProfileManagement")}
           />
         </SettingsSection>
 
