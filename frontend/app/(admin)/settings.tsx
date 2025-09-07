@@ -200,19 +200,20 @@ export default function SettingsUI() {
             isLast
           />
         </SettingsSection>
-         {/* Support Section */}
+
+        {/* Support Section */}
         <SettingsSection title="Support">
           <ChevronItem
             icon={<Mail size={20} color="#128C7E" />}
             title="Contact Support"
             subtitle="Get help with your LMS"
-            onPress={() => console.log('Support pressed')}
+            onPress={() => console.log("Support pressed")}
           />
           <ChevronItem
             icon={<Settings size={20} color="#128C7E" />}
             title="System Information"
             subtitle="Version 2.1.0"
-            onPress={() => console.log('System info pressed')}
+            onPress={() => console.log("System info pressed")}
             isLast
           />
         </SettingsSection>
