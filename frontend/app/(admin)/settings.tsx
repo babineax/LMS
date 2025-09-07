@@ -44,6 +44,8 @@ export default function SettingsUI() {
   const [notifications, setNotification] = useState<boolean>(true);
   const [emailNotifications, setEmailNotifications] = useState<boolean>(true);
   const [expanded, setExpanded] = useState(false);
+  const [openVersion, setOpenVersion] = useState(false);
+
   const SettingsSection: React.FC<SettingsSectionProps> = ({
     title,
     children,
@@ -180,13 +182,13 @@ export default function SettingsUI() {
             icon={<Users size={20} color="#128C7E" />}
             title="User Management"
             subtitle="Student and instructor settings"
-            onPress={() => router.push("/UserManagement")}
+            onPress={() => router.push("/Configuration/UserManagement")}
           />
           <ChevronItem
             icon={<Shield size={20} color="#128C7E" />}
             title="Platform Security"
             subtitle="Access controls and permissions"
-            onPress={() => router.push("/SecuritySettings")}
+            onPress={() => router.push("/Configuration/SecuritySettings")}
             isLast
           />
         </SettingsSection>
@@ -249,10 +251,10 @@ export default function SettingsUI() {
               </TouchableOpacity>
             </View>
           )}
-          {/* Main row */}
+          {/* Version */}
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => setExpanded(!expanded)}
+            onPress={() => setOpenVersion(!openVersion)}
             className="flex-row items-center p-4 border-b border-gray-200"
           >
             <View className="w-10 h-10 bg-[#A1EBE5] rounded-full items-center justify-center mr-3">
@@ -264,7 +266,7 @@ export default function SettingsUI() {
               </Text>
               <Text className="text-sm text-[#128C7E] mt-1">Version 2.1.0</Text>
             </View>
-            {expanded ? (
+            {openVersion ? (
               <ChevronDown size={20} color="#128C7E" />
             ) : (
               <ChevronRight size={20} color="#128C7E" />
@@ -272,7 +274,7 @@ export default function SettingsUI() {
           </TouchableOpacity>
 
           {/* Expanded section */}
-          {expanded && (
+          {openVersion && (
             <View className="bg-gray-50 px-6 py-3 border-b border-gray-200">
               <Text className="text-sm text-gray-600">App Version: 2.1.0</Text>
               <Text className="text-sm text-gray-600">Build: 20250907</Text>
@@ -283,7 +285,7 @@ export default function SettingsUI() {
               {/* Close button */}
               <TouchableOpacity
                 className="mt-3 self-start px-3 py-1 bg-[#128C7E] rounded-lg"
-                onPress={() => setExpanded(false)}
+                onPress={() => setOpenVersion(false)}
               >
                 <Text className="text-white text-sm">Close</Text>
               </TouchableOpacity>
