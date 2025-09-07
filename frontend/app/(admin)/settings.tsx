@@ -15,6 +15,8 @@ import {
   Users,
   Settings,
   Mail,
+  LogOut,
+  Trash2,
 } from "lucide-react-native";
 import {
   ChevronItemProps,
@@ -22,6 +24,19 @@ import {
   SettingsSectionProps,
   SwitchItemProps,
 } from "@/types/types";
+import { Alert } from "react-native";
+import { supabase } from "@/libs/supabase";
+import { router } from "expo-router";
+
+// --- LogOut Account ---
+const handleLogout = async () => {
+  const { error } = await supabase.auth.signOut();
+  if (error) {
+    Alert.alert("Logout Failed", error.message);
+  } else {
+    router.replace("/(auth)/sign");
+  }
+};
 
 export default function SettingsUI() {
   const [notifications, setNotification] = useState<boolean>(true);
@@ -189,6 +204,28 @@ export default function SettingsUI() {
             onPress={() => console.log("System info pressed")}
             isLast
           />
+        </SettingsSection>
+
+        {/* Account Actions Section */}
+        <SettingsSection title="Account Actions">
+          <TouchableOpacity
+            className="flex-row items-center p-4 border-b border-[#D0E8E6]"
+            onPress={handleLogout}
+            activeOpacity={0.7}
+          >
+            <View className="w-10 h-10 bg-[#A1EBE5] rounded-full items-center justify-center mr-3">
+              <LogOut size={20} color="#128C7E" />
+            </View>
+            <View className="flex-1">
+              <Text className="text-base font-medium text-[#2C3E50]">
+                Logout
+              </Text>
+              <Text className="text-sm text-[#128C7E] mt-1">
+                Sign out of your admin account
+              </Text>
+            </View>
+            <ChevronRight size={20} color="#128C7E" />
+          </TouchableOpacity>
         </SettingsSection>
       </ScrollView>
     </SafeAreaView>
