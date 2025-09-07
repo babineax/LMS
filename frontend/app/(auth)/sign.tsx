@@ -7,7 +7,7 @@ import {
   Modal,
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import {  Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -142,7 +142,7 @@ export default function Index() {
             break;
         }
       }, 2000);
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Unexpected error:", error);
       setErrorMessage("An unexpected error occurred: " + error.message);
     } finally {
@@ -200,12 +200,11 @@ export default function Index() {
                 onChangeText={(value) => handleInputChange("password", value)}
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                {showPassword ? 
-                  (<EyeOff size={24} color="#7E7B7B" />
-
-                  ):( 
-                  <Eye size={24} color="#7E7B7B" />)
-                }
+                {showPassword ? (
+                  <EyeOff size={24} color="#7E7B7B" />
+                ) : (
+                  <Eye size={24} color="#7E7B7B" />
+                )}
               </TouchableOpacity>
             </View>
             {errors.password && (
@@ -215,7 +214,7 @@ export default function Index() {
             )}
           </View>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/forgetPassword")}>
             <Text className="text-lg mt-2 text-right text-[#34967C]">
               Forgot password?
             </Text>
@@ -224,7 +223,7 @@ export default function Index() {
 
         <View className="px-5">
           {errorMessage && (
-            <View className="bg-red-50 border border-red-200 rounded-lg p-3 mt-2">
+            <View className="bg-red-50 border border-red-200 rounded-lg  mt-2">
               <Text className="text-red-600 text-sm text-center">
                 {errorMessage}
               </Text>
@@ -244,13 +243,7 @@ export default function Index() {
           </TouchableOpacity>
         </View>
 
-        {/* <View className="flex-row items-center gap-2.5 mt-7 px-5">
-          <View className="border-t border-[#2C3E50] flex-1"></View>
-          <Text className="text-lg font-medium text-[#2C3E50]">OR</Text>
-          <View className="border-t border-[#2C3E50] flex-1"></View>
-        </View> */}
-
-        <View className="flex-row absolute bottom-8 left-0 right-0 justify-center">
+        <View className="flex-row absolute  bottom-8 left-0 right-0 justify-center">
           <Text className="text-base text-[#2C3E50]">
             Don&apos;t have an account?{" "}
           </Text>
