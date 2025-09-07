@@ -50,28 +50,35 @@ interface ChevronItemProps {
   isLast?: boolean;
 }
 
-export default function SettingsUI(){
+export default function SettingsUI() {
+  const [notifications, setNotification] = useState<boolean>(true);
+  const [emailNotifications, setEmailNotifications] = useState<boolean>(true);
 
-  const SettingsSection: React.FC<SettingsSectionProps> = ({ title, children }) => (
+  const SettingsSection: React.FC<SettingsSectionProps> = ({
+    title,
+    children,
+  }) => (
     <View className="mb-6">
-      <Text className="text-lg font-semibold text-[#2C3E50] mb-3 px-4">{title}</Text>
+      <Text className="text-lg font-semibold text-[#2C3E50] mb-3 px-4">
+        {title}
+      </Text>
       <View className="bg-white rounded-xl mx-4 shadow-sm border border-[#D0E8E6]">
         {children}
       </View>
     </View>
   );
 
-  const SettingsItem: React.FC<SettingsItemProps> = ({ 
-    icon, 
-    title, 
-    subtitle, 
-    rightComponent, 
-    onPress, 
-    isLast = false 
+  const SettingsItem: React.FC<SettingsItemProps> = ({
+    icon,
+    title,
+    subtitle,
+    rightComponent,
+    onPress,
+    isLast = false,
   }) => (
-    <TouchableOpacity 
+    <TouchableOpacity
       onPress={onPress}
-      className={`flex-row items-center p-4 ${!isLast ? 'border-b border-[#D0E8E6]' : ''}`}
+      className={`flex-row items-center p-4 ${!isLast ? "border-b border-[#D0E8E6]" : ""}`}
       activeOpacity={0.7}
     >
       <View className="w-10 h-10 bg-[#A1EBE5] rounded-full items-center justify-center mr-3">
@@ -79,19 +86,21 @@ export default function SettingsUI(){
       </View>
       <View className="flex-1">
         <Text className="text-base font-medium text-[#2C3E50]">{title}</Text>
-        {subtitle && <Text className="text-sm text-[#128C7E] mt-1">{subtitle}</Text>}
+        {subtitle && (
+          <Text className="text-sm text-[#128C7E] mt-1">{subtitle}</Text>
+        )}
       </View>
       {rightComponent}
     </TouchableOpacity>
   );
 
-  const SwitchItem: React.FC<SwitchItemProps> = ({ 
-    icon, 
-    title, 
-    subtitle, 
-    value, 
-    onValueChange, 
-    isLast = false 
+  const SwitchItem: React.FC<SwitchItemProps> = ({
+    icon,
+    title,
+    subtitle,
+    value,
+    onValueChange,
+    isLast = false,
   }) => (
     <SettingsItem
       icon={icon}
@@ -101,8 +110,8 @@ export default function SettingsUI(){
         <Switch
           value={value}
           onValueChange={onValueChange}
-          trackColor={{ false: '#D0E8E6', true: '#16A085' }}
-          thumbColor={value ? '#1ABC9C' : '#FFFFFF'}
+          trackColor={{ false: "#D0E8E6", true: "#16A085" }}
+          thumbColor={value ? "#1ABC9C" : "#FFFFFF"}
           ios_backgroundColor="#D0E8E6"
         />
       }
@@ -110,12 +119,12 @@ export default function SettingsUI(){
     />
   );
 
-  const ChevronItem: React.FC<ChevronItemProps> = ({ 
-    icon, 
-    title, 
-    subtitle, 
-    onPress, 
-    isLast = false 
+  const ChevronItem: React.FC<ChevronItemProps> = ({
+    icon,
+    title,
+    subtitle,
+    onPress,
+    isLast = false,
   }) => (
     <SettingsItem
       icon={icon}
@@ -148,6 +157,24 @@ export default function SettingsUI(){
             title="Profile Management"
             subtitle="Update your admin profile"
             onPress={() => console.log("Profile pressed")}
+          />
+        </SettingsSection>
+
+        {/* Notification */}
+        <SettingsSection title="Notifications">
+          <SwitchItem
+            icon={<Bell size={20} color="#128C7E" />}
+            title="Push Notifications"
+            subtitle="Recieve alerts for important updates"
+            value={notifications}
+            onValueChange={setNotification}
+          />
+          <SwitchItem
+            icon={<Mail size={20} color="#128C7E" />}
+            title="Email Notifications"
+            subtitle="Get Notified via email"
+            value={emailNotifications}
+            onValueChange={setEmailNotifications}
           />
         </SettingsSection>
       </ScrollView>
