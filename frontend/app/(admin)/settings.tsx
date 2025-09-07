@@ -6,6 +6,7 @@ import {
   Switch,
   TouchableOpacity,
   SafeAreaView,
+  Linking,
 } from "react-native";
 
 import {
@@ -16,7 +17,8 @@ import {
   Settings,
   Mail,
   LogOut,
-  Trash2,
+  ChevronDown,
+  Phone,
 } from "lucide-react-native";
 import {
   ChevronItemProps,
@@ -41,7 +43,7 @@ const handleLogout = async () => {
 export default function SettingsUI() {
   const [notifications, setNotification] = useState<boolean>(true);
   const [emailNotifications, setEmailNotifications] = useState<boolean>(true);
-
+  const [expanded, setExpanded] = useState(false);
   const SettingsSection: React.FC<SettingsSectionProps> = ({
     title,
     children,
@@ -178,32 +180,115 @@ export default function SettingsUI() {
             icon={<Users size={20} color="#128C7E" />}
             title="User Management"
             subtitle="Student and instructor settings"
-            onPress={() => console.log("User management pressed")}
+            onPress={() => router.push("/UserManagement")}
           />
           <ChevronItem
             icon={<Shield size={20} color="#128C7E" />}
             title="Platform Security"
             subtitle="Access controls and permissions"
-            onPress={() => console.log("Platform security pressed")}
+            onPress={() => router.push("/SecuritySettings")}
             isLast
           />
         </SettingsSection>
 
         {/* Support Section */}
         <SettingsSection title="Support">
-          <ChevronItem
-            icon={<Mail size={20} color="#128C7E" />}
-            title="Contact Support"
-            subtitle="Get help with your LMS"
-            onPress={() => console.log("Support pressed")}
-          />
-          <ChevronItem
-            icon={<Settings size={20} color="#128C7E" />}
-            title="System Information"
-            subtitle="Version 2.1.0"
-            onPress={() => console.log("System info pressed")}
-            isLast
-          />
+          {/* Main row */}
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => setExpanded(!expanded)}
+            className="flex-row items-center p-4 border-b border-gray-200"
+          >
+            <View className="w-10 h-10 bg-[#A1EBE5] rounded-full items-center justify-center mr-3">
+              <Mail size={20} color="#128C7E" />
+            </View>
+            <View className="flex-1">
+              <Text className="text-base font-medium text-[#2C3E50]">
+                Contact Support
+              </Text>
+              <Text className="text-sm text-[#128C7E] mt-1">
+                Get help with your LMS
+              </Text>
+            </View>
+            {expanded ? (
+              <ChevronDown size={20} color="#128C7E" />
+            ) : (
+              <ChevronRight size={20} color="#128C7E" />
+            )}
+          </TouchableOpacity>
+
+          {/* Expanded section */}
+          {expanded && (
+            <View className="bg-gray-50 px-6 py-3 border-b border-gray-200">
+              <TouchableOpacity
+                className="flex-row items-center mb-3"
+                onPress={() => Linking.openURL("mailto:support@yourapp.com")}
+              >
+                <Mail size={18} color="#128C7E" className="mr-2" />
+                <Text className="text-sm text-[#2C3E50]">
+                  Email: owinogabrieel@gmail.com
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                className="flex-row items-center"
+                onPress={() => Linking.openURL("tel:+254740851719")}
+              >
+                <Phone size={18} color="#128C7E" className="mr-2" />
+                <Text className="text-sm text-[#2C3E50]">
+                  Call: (+254) 740 851 719
+                </Text>
+              </TouchableOpacity>
+
+              {/* Close button */}
+              <TouchableOpacity
+                className="mt-4 self-start px-3 py-1 bg-[#128C7E] rounded-lg"
+                onPress={() => setExpanded(false)}
+              >
+                <Text className="text-white text-sm">Close</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          {/* Main row */}
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => setExpanded(!expanded)}
+            className="flex-row items-center p-4 border-b border-gray-200"
+          >
+            <View className="w-10 h-10 bg-[#A1EBE5] rounded-full items-center justify-center mr-3">
+              <Settings size={20} color="#128C7E" />
+            </View>
+            <View className="flex-1">
+              <Text className="text-base font-medium text-[#2C3E50]">
+                System Information
+              </Text>
+              <Text className="text-sm text-[#128C7E] mt-1">Version 2.1.0</Text>
+            </View>
+            {expanded ? (
+              <ChevronDown size={20} color="#128C7E" />
+            ) : (
+              <ChevronRight size={20} color="#128C7E" />
+            )}
+          </TouchableOpacity>
+
+          {/* Expanded section */}
+          {expanded && (
+            <View className="bg-gray-50 px-6 py-3 border-b border-gray-200">
+              <Text className="text-sm text-gray-600">App Version: 2.1.0</Text>
+              <Text className="text-sm text-gray-600">Build: 20250907</Text>
+              <Text className="text-sm text-gray-600">
+                Last Update: Sep 7, 2025
+              </Text>
+
+              {/* Close button */}
+              <TouchableOpacity
+                className="mt-3 self-start px-3 py-1 bg-[#128C7E] rounded-lg"
+                onPress={() => setExpanded(false)}
+              >
+                <Text className="text-white text-sm">Close</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </SettingsSection>
 
         {/* Account Actions Section */}
