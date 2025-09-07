@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  Alert
-} from 'react-native';
+  Alert,
+} from "react-native";
 import {
   Mail,
   ArrowLeft,
@@ -16,7 +16,7 @@ import {
   Clock,
   RefreshCw,
   Shield,
-} from 'lucide-react-native';
+} from "lucide-react-native";
 import { router } from "expo-router";
 
 interface Step {
@@ -27,39 +27,39 @@ interface Step {
 }
 
 export default function ForgotPasswordUI() {
-  const [email, setEmail] = useState<string>('');
-  const [currentStep, setCurrentStep] = useState<number>(1);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [resetCode, setResetCode] = useState<string>('');
-  const [newPassword, setNewPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>('');
-  const [countdown, setCountdown] = useState<number>(0);
+  const [email, setEmail] = useState("");
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [resetCode, setResetCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [countdown, setCountdown] = useState(0);
 
   const steps: Step[] = [
     {
       id: 1,
-      title: 'Enter Email Address',
-      subtitle: 'We\'ll send you a reset link',
-      icon: <Mail size={60} color="#1ABC9C" />
+      title: "Enter Email Address",
+      subtitle: "We'll send you a reset link",
+      icon: <Mail size={60} color="#1ABC9C" />,
     },
     {
       id: 2,
-      title: 'Check Your Email',
-      subtitle: 'Enter the verification code',
-      icon: <Clock size={60} color="#1ABC9C" />
+      title: "Check Your Email",
+      subtitle: "Enter the verification code",
+      icon: <Clock size={60} color="#1ABC9C" />,
     },
     {
       id: 3,
-      title: 'Reset Password',
-      subtitle: 'Create a new secure password',
-      icon: <Shield size={60} color="#1ABC9C" />
+      title: "Reset Password",
+      subtitle: "Create a new secure password",
+      icon: <Shield size={60} color="#1ABC9C" />,
     },
     {
       id: 4,
-      title: 'Success!',
-      subtitle: 'Your password has been reset',
-      icon: <CheckCircle size={60} color="#1ABC9C" />
-    }
+      title: "Success!",
+      subtitle: "Your password has been reset",
+      icon: <CheckCircle size={60} color="#1ABC9C" />,
+    },
   ];
 
   const validateEmail = (email: string): boolean => {
@@ -68,56 +68,40 @@ export default function ForgotPasswordUI() {
   };
 
   const handleSendResetLink = async () => {
-    if (!email.trim()) {
-      Alert.alert('Error', 'Please enter your email address');
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      Alert.alert('Error', 'Please enter a valid email address');
-      return;
-    }
+    if (!email.trim())
+      return Alert.alert("Error", "Please enter your email address");
+    if (!validateEmail(email))
+      return Alert.alert("Error", "Please enter a valid email address");
 
     setIsLoading(true);
-    
-    // Simulate API call
     setTimeout(() => {
       setIsLoading(false);
       setCurrentStep(2);
       startCountdown();
-      console.log('Reset link sent to:', email);
-    }, 2000);
+    }, 1500);
   };
 
   const handleVerifyCode = () => {
     if (!resetCode.trim() || resetCode.length !== 6) {
-      Alert.alert('Error', 'Please enter the 6-digit verification code');
+      Alert.alert("Error", "Please enter the 6-digit verification code");
       return;
     }
-
-    // Simulate verification
-    console.log('Verifying code:', resetCode);
     setCurrentStep(3);
   };
 
   const handleResetPassword = () => {
     if (!newPassword.trim() || !confirmPassword.trim()) {
-      Alert.alert('Error', 'Please fill in both password fields');
-      return;
+      return Alert.alert("Error", "Please fill in both password fields");
     }
-
     if (newPassword !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
-      return;
+      return Alert.alert("Error", "Passwords do not match");
     }
-
     if (newPassword.length < 8) {
-      Alert.alert('Error', 'Password must be at least 8 characters long');
-      return;
+      return Alert.alert(
+        "Error",
+        "Password must be at least 8 characters long"
+      );
     }
-
-    // Simulate password reset
-    console.log('Password reset successful');
     setCurrentStep(4);
   };
 
@@ -136,46 +120,42 @@ export default function ForgotPasswordUI() {
 
   const handleResendCode = () => {
     if (countdown > 0) return;
-    
-    console.log('Resending verification code to:', email);
-    Alert.alert('Code Sent', 'A new verification code has been sent to your email');
+    Alert.alert(
+      "Code Sent",
+      "A new verification code has been sent to your email"
+    );
     startCountdown();
   };
 
-  const handleBackToLogin = () => {
-    console.log('Navigate back to login');
-    
-  };
-
-  const InputField = ({ 
-    placeholder, 
-    value, 
-    onChangeText, 
+  const InputField = ({
+    placeholder,
+    value,
+    onChangeText,
     secureTextEntry = false,
-    keyboardType ='default',
-    maxLength
+    keyboardType = "default",
+    maxLength,
   }: {
     placeholder: string;
     value: string;
     onChangeText: (text: string) => void;
     secureTextEntry?: boolean;
-    keyboardType?: 'default' | 'email-address' | 'numeric';
+    keyboardType?: "default" | "email-address" | "numeric";
     maxLength?: number;
   }) => (
-    <View className="bg-white rounded-xl border border-[#D0E8E6] px-4 py-3 mb-4">
+    <View className="flex-row items-center border border-[#1ABC9C] h-12 rounded-lg px-2.5 relative mb-6">
       <TextInput
-        className="text-base text-[#2C3E50]"
+        style={{ fontSize: 16, color: "#2C3E50", paddingVertical: 4 }}
         placeholder={placeholder}
-        placeholderTextColor="#A1EBE5"
+        placeholderTextColor="#7E7B7B"
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
         maxLength={maxLength}
         autoCapitalize="none"
-      
+        autoCorrect={false}
+        blurOnSubmit={false}
       />
-    
     </View>
   );
 
@@ -183,10 +163,10 @@ export default function ForgotPasswordUI() {
     <View className="flex-1 justify-center px-6">
       <View className="items-center mb-8">
         {steps[0].icon}
-        <Text className="text-2xl font-bold text-[#2C3E50] mt-4 text-center">
+        <Text className="text-2xl font-bold text-[#2C3E50] mt-4">
           {steps[0].title}
         </Text>
-        <Text className="text-base text-[#128C7E] mt-2 text-center">
+        <Text className="text-base text-[#128C7E] mt-2">
           {steps[0].subtitle}
         </Text>
       </View>
@@ -199,7 +179,7 @@ export default function ForgotPasswordUI() {
       />
 
       <TouchableOpacity
-        className={`rounded-xl py-4 items-center ${isLoading ? 'bg-[#D0E8E6]' : 'bg-[#1ABC9C]'}`}
+        className={`rounded-xl py-4 items-center ${isLoading ? "bg-[#D0E8E6]" : "bg-[#1ABC9C]"}`}
         onPress={handleSendResetLink}
         disabled={isLoading}
         activeOpacity={0.8}
@@ -207,21 +187,27 @@ export default function ForgotPasswordUI() {
         {isLoading ? (
           <View className="flex-row items-center">
             <RefreshCw size={20} color="#128C7E" />
-            <Text className="text-[#128C7E] font-semibold text-base ml-2">Sending...</Text>
+            <Text className="text-[#128C7E] font-semibold text-base ml-2">
+              Sending...
+            </Text>
           </View>
         ) : (
-          <Text className="text-white font-semibold text-base">Send Reset Link</Text>
+          <Text className="text-white font-semibold text-base">
+            Send Reset Link
+          </Text>
         )}
       </TouchableOpacity>
 
-         <View className="flex-row justify-center mt-6">
-               <Text className="text-lg text-[#2C3E50]">Remembered Your Password?</Text>
-               <TouchableOpacity onPress={() =>   router.push("/sign")}>
-                 <Text className="text-lg text-[#2B876E] font-semibold ml-1">
-                   Sign In
-                 </Text>
-               </TouchableOpacity>
-             </View>
+      <View className="flex-row justify-center mt-6">
+        <Text className="text-lg text-[#2C3E50]">
+          Remembered Your Password?
+        </Text>
+        <TouchableOpacity onPress={() => router.push("/sign")}>
+          <Text className="text-lg text-[#2B876E] font-semibold ml-1">
+            Sign In
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 
@@ -229,10 +215,10 @@ export default function ForgotPasswordUI() {
     <View className="flex-1 justify-center px-6">
       <View className="items-center mb-8">
         {steps[1].icon}
-        <Text className="text-2xl font-bold text-[#2C3E50] mt-4 text-center">
+        <Text className="text-2xl font-bold text-[#2C3E50] mt-4">
           {steps[1].title}
         </Text>
-        <Text className="text-base text-[#128C7E] mt-2 text-center">
+        <Text className="text-base text-[#128C7E] mt-2">
           We've sent a 6-digit code to
         </Text>
         <Text className="text-base font-semibold text-[#2C3E50] mt-1">
@@ -257,14 +243,16 @@ export default function ForgotPasswordUI() {
       </TouchableOpacity>
 
       <View className="flex-row justify-center items-center mt-6">
-        <Text className="text-[#128C7E]">Didn't receive code? </Text>
+        <Text className="text-lg text-[#2C3E50]">Didn't receive code? </Text>
         <TouchableOpacity
           onPress={handleResendCode}
           disabled={countdown > 0}
           activeOpacity={0.7}
         >
-          <Text className={`font-semibold ${countdown > 0 ? 'text-[#A1EBE5]' : 'text-[#1ABC9C]'}`}>
-            {countdown > 0 ? `Resend in ${countdown}s` : 'Resend'}
+          <Text
+            className={`font-semibold ${countdown > 0 ? " text-[#2B876E]" : "text-[#1ABC9C]"}`}
+          >
+            {countdown > 0 ? `Resend in ${countdown}s` : "Resend"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -275,10 +263,10 @@ export default function ForgotPasswordUI() {
     <View className="flex-1 justify-center px-6">
       <View className="items-center mb-8">
         {steps[2].icon}
-        <Text className="text-2xl font-bold text-[#2C3E50] mt-4 text-center">
+        <Text className="text-2xl font-bold text-[#2C3E50] mt-4">
           {steps[2].title}
         </Text>
-        <Text className="text-base text-[#128C7E] mt-2 text-center">
+        <Text className="text-base text-[#128C7E] mt-2">
           {steps[2].subtitle}
         </Text>
       </View>
@@ -287,28 +275,23 @@ export default function ForgotPasswordUI() {
         placeholder="New password"
         value={newPassword}
         onChangeText={setNewPassword}
-        secureTextEntry={true}
+        secureTextEntry
       />
-
       <InputField
         placeholder="Confirm new password"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
-        secureTextEntry={true}
+        secureTextEntry
       />
-
-      <View className="bg-[#F1FFF8] rounded-xl p-3 mb-4 border border-[#A1EBE5]">
-        <Text className="text-sm text-[#128C7E]">
-          Password must be at least 8 characters long and contain a mix of letters, numbers, and symbols.
-        </Text>
-      </View>
 
       <TouchableOpacity
         className="bg-[#1ABC9C] rounded-xl py-4 items-center"
         onPress={handleResetPassword}
         activeOpacity={0.8}
       >
-        <Text className="text-white font-semibold text-base">Reset Password</Text>
+        <Text className="text-white font-semibold text-base">
+          Reset Password
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -317,27 +300,23 @@ export default function ForgotPasswordUI() {
     <View className="flex-1 justify-center px-6">
       <View className="items-center mb-8">
         {steps[3].icon}
-        <Text className="text-2xl font-bold text-[#2C3E50] mt-4 text-center">
+        <Text className="text-2xl font-bold text-[#2C3E50] mt-4">
           {steps[3].title}
         </Text>
-        <Text className="text-base text-[#128C7E] mt-2 text-center">
-          Your password has been successfully reset. You can now access your LMS account with your new password.
+        <Text className="text-base text-[#128C7E] mt-2">
+          Your password has been successfully reset.
         </Text>
       </View>
 
       <TouchableOpacity
         className="bg-[#1ABC9C] rounded-xl py-4 items-center mb-4"
-        onPress={handleBackToLogin}
+        onPress={() => router.push("/sign")}
         activeOpacity={0.8}
       >
-        <Text className="text-white font-semibold text-base">Continue to Sign In</Text>
-      </TouchableOpacity>
-
-      <View className="bg-[#F1FFF8] rounded-xl p-4 border border-[#A1EBE5]">
-        <Text className="text-sm text-[#128C7E] text-center">
-          🔐 For security, please sign in again with your new password
+        <Text className="text-white font-semibold text-base">
+          Continue to Sign In
         </Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 
@@ -362,7 +341,7 @@ export default function ForgotPasswordUI() {
       <View className="bg-[#1ABC9C] pt-4 pb-6 px-4">
         <View className="flex-row items-center">
           {currentStep > 1 && currentStep < 4 && (
-            <TouchableOpacity 
+            <TouchableOpacity
               onPress={() => setCurrentStep(currentStep - 1)}
               className="mr-3"
               activeOpacity={0.7}
@@ -371,37 +350,33 @@ export default function ForgotPasswordUI() {
             </TouchableOpacity>
           )}
           <View className="flex-1">
-            <Text className="text-2xl font-bold text-white">Forgot Password</Text>
+            <Text className="text-2xl font-bold text-white">
+              Forgot Password
+            </Text>
             <Text className="text-[#D0E8E6] mt-1">Restore Your Account</Text>
           </View>
         </View>
       </View>
 
-      {/* Progress Indicator */}
+      {/* Progress */}
       {currentStep < 4 && (
         <View className="flex-row px-6 py-4">
           {steps.slice(0, 3).map((step, index) => (
             <View key={step.id} className="flex-1 flex-row items-center">
-              <View 
+              <View
                 className={`w-8 h-8 rounded-full items-center justify-center ${
-                  currentStep > index + 1 
-                    ? 'bg-[#1ABC9C]' 
-                    : currentStep === index + 1 
-                      ? 'bg-[#1ABC9C]' 
-                      : 'bg-[#D0E8E6]'
+                  currentStep >= index + 1 ? "bg-[#1ABC9C]" : "bg-[#D0E8E6]"
                 }`}
               >
-                <Text className={`text-sm font-bold ${
-                  currentStep >= index + 1 ? 'text-white' : 'text-[#A1EBE5]'
-                }`}>
+                <Text
+                  className={`text-sm font-bold ${currentStep >= index + 1 ? "text-white" : "text-[#A1EBE5]"}`}
+                >
                   {index + 1}
                 </Text>
               </View>
               {index < 2 && (
-                <View 
-                  className={`flex-1 h-0.5 mx-2 ${
-                    currentStep > index + 1 ? 'bg-[#1ABC9C]' : 'bg-[#D0E8E6]'
-                  }`} 
+                <View
+                  className={`flex-1 h-0.5 mx-2 ${currentStep > index + 1 ? "bg-[#1ABC9C]" : "bg-[#D0E8E6]"}`}
                 />
               )}
             </View>
@@ -409,9 +384,9 @@ export default function ForgotPasswordUI() {
         </View>
       )}
 
-      <KeyboardAvoidingView 
-        className="flex-1" 
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      <KeyboardAvoidingView
+        className="flex-1"
+        behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         {renderCurrentStep()}
       </KeyboardAvoidingView>
