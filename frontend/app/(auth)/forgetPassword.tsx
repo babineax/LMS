@@ -16,6 +16,8 @@ import {
   Clock,
   RefreshCw,
   Shield,
+  Eye,
+  EyeOff,
 } from "lucide-react-native";
 import { router } from "expo-router";
 
@@ -34,6 +36,8 @@ export default function ForgotPasswordUI() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [countdown, setCountdown] = useState(0);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const steps: Step[] = [
     {
@@ -134,6 +138,9 @@ export default function ForgotPasswordUI() {
     secureTextEntry = false,
     keyboardType = "default",
     maxLength,
+    showPasswordToggle = false,
+    isPasswordVisible,
+    onTogglePassword,
   }: {
     placeholder: string;
     value: string;
@@ -141,21 +148,37 @@ export default function ForgotPasswordUI() {
     secureTextEntry?: boolean;
     keyboardType?: "default" | "email-address" | "numeric";
     maxLength?: number;
+    showPasswordToggle?: boolean;
+    isPasswordVisible?: boolean;
+    onTogglePassword?: () => void;
   }) => (
     <View className="flex-row items-center border border-[#1ABC9C] h-12 rounded-lg px-2.5 relative mb-6">
       <TextInput
-        style={{ fontSize: 16, color: "#2C3E50", paddingVertical: 4 }}
+        style={{ fontSize: 16, color: "#2C3E50", paddingVertical: 4, flex: 1 }}
         placeholder={placeholder}
         placeholderTextColor="#7E7B7B"
         value={value}
         onChangeText={onChangeText}
-        secureTextEntry={secureTextEntry}
+        secureTextEntry={secureTextEntry && !isPasswordVisible}
         keyboardType={keyboardType}
         maxLength={maxLength}
         autoCapitalize="none"
         autoCorrect={false}
         blurOnSubmit={false}
       />
+      {showPasswordToggle && (
+        <TouchableOpacity
+          onPress={onTogglePassword}
+          className="ml-2"
+          activeOpacity={0.7}
+        >
+          {isPasswordVisible ? (
+            <EyeOff size={20} color="#7E7B7B" />
+          ) : (
+            <Eye size={20} color="#7E7B7B" />
+          )}
+        </TouchableOpacity>
+      )}
     </View>
   );
 
@@ -199,11 +222,11 @@ export default function ForgotPasswordUI() {
       </TouchableOpacity>
 
       <View className="flex-row justify-center mt-6">
-        <Text className="text-lg text-[#2C3E50]">
+        <Text className="text-base text-[#2C3E50]">
           Remembered Your Password?
         </Text>
         <TouchableOpacity onPress={() => router.push("/sign")}>
-          <Text className="text-lg text-[#2B876E] font-semibold ml-1">
+          <Text className="text-base text-[#34967C] font-semibold ml-1">
             Sign In
           </Text>
         </TouchableOpacity>
@@ -276,12 +299,18 @@ export default function ForgotPasswordUI() {
         value={newPassword}
         onChangeText={setNewPassword}
         secureTextEntry
+        showPasswordToggle
+        isPasswordVisible={showNewPassword}
+        onTogglePassword={() => setShowNewPassword(!showNewPassword)}
       />
       <InputField
         placeholder="Confirm new password"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
         secureTextEntry
+        showPasswordToggle
+        isPasswordVisible={showConfirmPassword}
+        onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
       />
 
       <TouchableOpacity
@@ -360,30 +389,42 @@ export default function ForgotPasswordUI() {
 
       {/* Progress */}
       {currentStep < 4 && (
-        <View className="flex-row px-6 py-4">
-          {steps.slice(0, 3).map((step, index) => (
-            <View key={step.id} className="flex-1 flex-row items-center">
-              <View
-                className={`w-8 h-8 rounded-full items-center justify-center ${
-                  currentStep >= index + 1 ? "bg-[#1ABC9C]" : "bg-[#D0E8E6]"
-                }`}
-              >
-                <Text
-                  className={`text-sm font-bold ${currentStep >= index + 1 ? "text-white" : "text-[#A1EBE5]"}`}
-                >
-                  {index + 1}
-                </Text>
-              </View>
-              {index < 2 && (
+        <View className="bg-white shadow-sm">
+          <View className="flex-row px-6 py-6">
+            {steps.slice(0, 3).map((step, index) => (
+              <View key={step.id} className="flex-1 flex-row items-center">
                 <View
-                  className={`flex-1 h-0.5 mx-2 ${currentStep > index + 1 ? "bg-[#1ABC9C]" : "bg-[#D0E8E6]"}`}
-                />
-              )}
-            </View>
-          ))}
+                  className={`w-8 h-8 rounded-full items-center justify-center ${
+                    currentStep >= index + 1 ? "bg-[#1ABC9C]" : "bg-[#D0E8E6]"
+                  }`}
+                >
+                  <Text
+                    className={`text-sm font-bold ${currentStep >= index + 1 ? "text-white" : "text-[#A1EBE5]"}`}
+                  >
+                    {index + 1}
+                  </Text>
+                </View>
+                {/* Connecting line between steps */}
+                {index < 2 && (
+                  <View
+                    className={`flex-1 h-0.5 mx-2 ${currentStep > index + 1 ? "bg-[#1ABC9C]" : "bg-[#D0E8E6]"}`}
+                  />
+                )}
+              </View>
+            ))}
+          </View>
+          <View className="px-6 pb-4">
+            <Text className="text-sm font-medium text-[#2C3E50] text-center">
+              Step {currentStep} of 3
+            </Text>
+            <Text className="text-xs text-[#7E7B7B] text-center mt-1">
+              {steps[currentStep - 1]?.title}
+            </Text>
+          </View>
         </View>
       )}
 
+      {/* Main content area with keyboard handling */}
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : undefined}
