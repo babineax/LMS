@@ -177,6 +177,29 @@ export default function SettingsUI() {
             onValueChange={setEmailNotifications}
           />
         </SettingsSection>
+
+        {/* LMS Configuration */}
+        <SettingsSection title="LMS Configuration">
+          <ChevronItem
+            icon={<Settings size={20} color="#128C7E" />}
+            title="Course Settings"
+            subtitle="Default course configurations"
+            onPress={() => console.log("Course settings pressed")}
+          />
+          <ChevronItem
+            icon={<Users size={20} color="#128C7E" />}
+            title="User Management"
+            subtitle="Student and instructor settings"
+            onPress={() => console.log("User management pressed")}
+          />
+          <ChevronItem
+            icon={<Shield size={20} color="#128C7E" />}
+            title="Platform Security"
+            subtitle="Access controls and permissions"
+            onPress={() => console.log("Platform security pressed")}
+            isLast
+          />
+        </SettingsSection>
       </ScrollView>
     </SafeAreaView>
   );
