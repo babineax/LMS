@@ -45,7 +45,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const handleQuickActionPress = (actionId: string) => {
     switch (actionId) {
       case "add-user":
-        router.push("/(admin)/create-user");
+        router.push("/(admin)/addUser/AddUserUI");
         break;
       case "add-course":
         router.push("/(admin)/CreateCourse");
