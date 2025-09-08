@@ -261,7 +261,6 @@ export interface BorrowedBook {
 }
 
 // Setting Interfaces
-
 export interface SettingsSectionProps {
   title: string;
   children: React.ReactNode;
@@ -303,6 +302,26 @@ export interface UserRoles {
   maxRenewals: number;
   finePerDay: number;
   isActive: boolean;
+}
+
+// Add user Types
+export interface InputFieldProps {
+  label: string;
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  icon: React.ReactNode;
+  secureTextEntry?: boolean;
+  keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
+  multiline?: boolean;
+}
+
+export interface DropdownFieldProps {
+  label: string;
+  value: string;
+  options: string[];
+  onSelect: (value: string) => void;
+  icon: React.ReactNode;
 }
 
 // Types for API responses and requests
