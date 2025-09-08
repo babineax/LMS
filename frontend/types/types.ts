@@ -260,44 +260,37 @@ export interface BorrowedBook {
   status: "borrowed" | "overdue" | "returned";
 }
 
-// export interface BorrowedBooks {
-//   id: string;
-//   bookTitle: string;
-//   author: string;
-//   isbn: string;
-//   borrowerName: string;
-//   borrowerEmail: string;
-//   borrowerPhone?: string;
-//   borrowerId: string;
-//   borrowDate: Date;
-//   dueDate: Date;
-//   returnDate?: Date;
-//   status: "borrowed" | "overdue" | "returned";
-//   fineAmount?: number;
-//   renewalCount?: number;
-//   maxRenewals?: number;
-// }
-// export interface Book {
-//   id: string;
-//   title: string;
-//   author: string;
-//   isbn: string;
-//   category: string;
-//   quantity: number;
-//   available: number;
-// }
+// Setting Interfaces
+export interface SettingsSectionProps {
+  title: string;
+  children: React.ReactNode;
+}
 
-// export interface BorrowedBook {
-//   id: string;
-//   bookTitle: string;
-//   author: string;
-//   isbn: string;
-//   borrowerName: string;
-//   borrowerEmail: string;
-//   borrowDate: Date;
-//   dueDate: Date;
-//   status: "borrowed" | "overdue" | "returned";
-// }
+export interface SettingsItemProps {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  rightComponent?: React.ReactNode;
+  onPress?: () => void;
+  isLast?: boolean;
+}
+
+export interface SwitchItemProps {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  value: boolean;
+  onValueChange: (value: boolean) => void;
+  isLast?: boolean;
+}
+
+export interface ChevronItemProps {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  onPress?: () => void;
+  isLast?: boolean;
+}
 
 export interface UserRoles {
   id: string;
@@ -309,6 +302,26 @@ export interface UserRoles {
   maxRenewals: number;
   finePerDay: number;
   isActive: boolean;
+}
+
+// Add user Types
+export interface InputFieldProps {
+  label: string;
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  icon: React.ReactNode;
+  secureTextEntry?: boolean;
+  keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
+  multiline?: boolean;
+}
+
+export interface DropdownFieldProps {
+  label: string;
+  value: string;
+  options: string[];
+  onSelect: (value: string) => void;
+  icon: React.ReactNode;
 }
 
 // Types for API responses and requests
