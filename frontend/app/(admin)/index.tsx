@@ -8,9 +8,9 @@ import { StatsOverview } from "./elements/StatsOverview";
 import { RecentUsersSection } from "./elements/RecentUsersSection";
 import { UsersTableSection } from "./elements/UsersTableSection";
 import { QuickActionsSection } from "./elements/QuickActionsSection";
-import { PaymentManagementSection } from "./Bursary/PaymentManagementSection";
-import { TeacherPayoutSection } from "./Bursary/TeacherPayoutSection";
-import { FeeStructureSection } from "./Bursary/ FeeStructureSection";
+import { PaymentManagementSection } from "./bursary/PaymentManagementSection";
+import { TeacherPayoutSection } from "./bursary/TeacherPayoutSection";
+import { FeeStructureSection } from "./bursary/ FeeStructureSection";
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   statsData = [],
