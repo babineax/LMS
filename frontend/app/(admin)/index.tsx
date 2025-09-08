@@ -53,9 +53,6 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       case "library":
         router.push("/(admin)/library/LibraryAction");
         break;
-      case "analytics":
-        router.push("/(admin)/analytics");
-        break;
       case "settings":
         router.push("/(admin)/settings/SettingsUI");
         break;
@@ -131,7 +128,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   return (
     <ScrollView
-      className={`flex-1 bg-gray-50 ${className}`}
+      className={`flex-1 bg-[#F1FFF8] ${className}`}
       testID={testID}
       showsVerticalScrollIndicator={false}
     >
