@@ -148,7 +148,7 @@ export default function SettingsUI() {
             icon={<Users size={20} color="#128C7E" />}
             title="Profile Management"
             subtitle="Update your admin profile"
-            onPress={() => router.push("/Configuration/ProfileManagement")}
+            onPress={() => router.push("settings/configuration/ProfileManagement")}
           />
         </SettingsSection>
 
@@ -182,13 +182,13 @@ export default function SettingsUI() {
             icon={<Users size={20} color="#128C7E" />}
             title="User Management"
             subtitle="Student and instructor settings"
-            onPress={() => router.push("/Configuration/UserManagement")}
+            onPress={() => router.push("/configuration/UserManagement")}
           />
           <ChevronItem
             icon={<Shield size={20} color="#128C7E" />}
             title="Platform Security"
             subtitle="Access controls and permissions"
-            onPress={() => router.push("/Configuration/SecuritySettings")}
+            onPress={() => router.push("/configuration/SecuritySettings")}
             isLast
           />
         </SettingsSection>

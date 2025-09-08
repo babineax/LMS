@@ -57,7 +57,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         router.push("/(admin)/analytics");
         break;
       case "settings":
-        router.push("/(admin)/settings");
+        router.push("/(admin)/settings/SettingsUI");
         break;
       case "payment-management":
         setActiveSection("payments");
