@@ -8,9 +8,9 @@ import { StatsOverview } from "./elements/StatsOverview";
 import { RecentUsersSection } from "./elements/RecentUsersSection";
 import { UsersTableSection } from "./elements/UsersTableSection";
 import { QuickActionsSection } from "./elements/QuickActionsSection";
-import { PaymentManagementSection } from "./Bursary/PaymentManagementSection";
-import { TeacherPayoutSection } from "./Bursary/TeacherPayoutSection";
-import { FeeStructureSection } from "./Bursary/ FeeStructureSection";
+import { PaymentManagementSection } from "./bursary/PaymentManagementSection";
+import { TeacherPayoutSection } from "./bursary/TeacherPayoutSection";
+import { FeeStructureSection } from "./bursary/ FeeStructureSection";
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   statsData = [],
@@ -45,7 +45,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const handleQuickActionPress = (actionId: string) => {
     switch (actionId) {
       case "add-user":
-        router.push("/(admin)/create-user");
+        router.push("/(admin)/addUser/AddUserUI");
         break;
       case "add-course":
         router.push("/(admin)/CreateCourse");
@@ -53,11 +53,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       case "library":
         router.push("/(admin)/library/LibraryAction");
         break;
-      case "analytics":
-        router.push("/(admin)/analytics");
-        break;
       case "settings":
-        router.push("/(admin)/settings");
+        router.push("/(admin)/settings/SettingsUI");
         break;
       case "payment-management":
         setActiveSection("payments");
@@ -131,7 +128,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
   return (
     <ScrollView
-      className={`flex-1 bg-gray-50 ${className}`}
+      className={`flex-1 bg-[#F1FFF8] ${className}`}
       testID={testID}
       showsVerticalScrollIndicator={false}
     >
