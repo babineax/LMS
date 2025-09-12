@@ -4,44 +4,39 @@ import * as ImagePicker from "expo-image-picker";
 
 interface QuestionProps {
   index: number;
-  type: "multiple-choice" | "input" | "both" | "input-upload";
+  // type: "multiple-choice" | "input" | "both" | "input-upload";
   question: string;
   options?: string[];
-  correctAnswer?: string;
+  correctAnswer?: string | null;
   onSelect?: (index: number, option: string) => void;
   onInput?: (index: number, value: string) => void;
   onUpload?: (index: number, file: { uri: string; type: string; name: string }) => void;
   submitted: boolean;
-  selectedAnswer?: string;
-  inputAnswer?: string;
-  uploadedFile?: { uri: string; type: string; name: string };
+  inputAnswer?: string | null;
+  uploadedFile?: { uri: string; type: string; name: string } | null;
 }
 
-type DocumentPickerResult =
-  | { canceled: true }
-  | { canceled: false; assets: DocumentPickerAsset[] };
+// type DocumentPickerResult =
+//   | { canceled: true }
+//   | { canceled: false; assets: DocumentPickerAsset[] };
 
-type DocumentPickerAsset = {
-  mimeType?: string; 
-  name: string;      
-  size?: number;     
-  uri: string;       
-  type?: string;     
-};
+// type DocumentPickerAsset = {
+//   mimeType?: string; 
+//   name: string;      
+//   size?: number;     
+//   uri: string;       
+//   type?: string;     
+// };
 
-type DocFile = DocumentPicker.DocumentPickerAsset;
+// type DocFile = DocumentPicker.DocumentPickerAsset;
 
-export default function Question({
+export default function InputQuestion({
   index,
-  type,
   question,
-  options = [],
   correctAnswer,
-  onSelect,
   onInput,
   onUpload,
   submitted,
-  selectedAnswer,
   inputAnswer,
   uploadedFile,
 }: QuestionProps) {
@@ -82,13 +77,21 @@ export default function Question({
       </Text>
 
       {/* Input + Upload */}
-      {type === "input-upload" && (
+     
         <View className="space-y-3">
           {/* Text Input */}
           <TextInput
+            style={{
+                height: 100,
+                borderColor: "#ccc",
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 10,
+                textAlignVertical: "top"
+            }}
             className="border border-border rounded-xl p-3"
             placeholder="Type your answer..."
-            value={inputAnswer}
+            value={inputAnswer!}
             editable={!submitted}
             onChangeText={(text) => onInput?.(index, text)}
           />
@@ -123,7 +126,7 @@ export default function Question({
             </View>
           )}
         </View>
-      )}
+      
     </View>
   );
 }
