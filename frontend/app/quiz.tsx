@@ -1,6 +1,6 @@
 import { View, ScrollView, Text, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
-import MultipleChoiceQuestion from "@/components/Quiz";
+import MultipleChoiceQuestion from "@/components/MultipleChoiceUI";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { parseDuration } from "@/utils/parseFunction";

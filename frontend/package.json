@@ -51,7 +51,8 @@
     "react-native-webview": "13.13.5",
     "tailwindcss": "^3.4.17",
     "uninstall": "^0.0.0",
-    "zod": "^4.0.14"
+    "zod": "^4.0.14",
+    "expo-document-picker": "~13.1.6"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

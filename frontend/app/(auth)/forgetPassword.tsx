@@ -189,7 +189,7 @@ export default function ForgotPasswordUI() {
         <Text className="text-2xl font-bold text-[#2C3E50] mt-4">
           {steps[0].title}
         </Text>
-        <Text className="text-base text-[#128C7E] mt-2">
+        <Text className="text-base text-primaryColor mt-2">
           {steps[0].subtitle}
         </Text>
       </View>
@@ -242,7 +242,7 @@ export default function ForgotPasswordUI() {
           {steps[1].title}
         </Text>
         <Text className="text-base text-[#128C7E] mt-2">
-          We've sent a 6-digit code to
+          We&apos;ve sent a 6-digit code to
         </Text>
         <Text className="text-base font-semibold text-[#2C3E50] mt-1">
           {email}
@@ -266,7 +266,7 @@ export default function ForgotPasswordUI() {
       </TouchableOpacity>
 
       <View className="flex-row justify-center items-center mt-6">
-        <Text className="text-lg text-[#2C3E50]">Didn't receive code? </Text>
+        <Text className="text-lg text-[#2C3E50]">Didn&apos;t receive code? </Text>
         <TouchableOpacity
           onPress={handleResendCode}
           disabled={countdown > 0}
@@ -367,7 +367,7 @@ export default function ForgotPasswordUI() {
   return (
     <SafeAreaView className="flex-1 bg-bgLight">
       {/* Header */}
-      <View className="bg-[#1ABC9C] pt-4 pb-6 px-4">
+      <View className="bg-[#1ABC9C] pt-10 pb-6 px-4">
         <View className="flex-row items-center">
           {currentStep > 1 && currentStep < 4 && (
             <TouchableOpacity
@@ -414,7 +414,7 @@ export default function ForgotPasswordUI() {
             ))}
           </View>
           <View className="px-6 pb-4">
-            <Text className="text-sm font-medium text-[#2C3E50] text-center">
+            <Text className="text-sm font-medium text-headingColor text-center">
               Step {currentStep} of 3
             </Text>
             <Text className="text-xs text-[#7E7B7B] text-center mt-1">
