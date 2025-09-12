@@ -67,12 +67,16 @@ export default function StudentSignUpScreen() {
                 <View className="flex-row justify-center p-3 gap-3">
                     {courses.length === 0 && (
                         <View className="flex-1 justify-center items-center">
-                            <Text className="text-center text-4xl">📚</Text>
-                            <Text className="text-headingColor text-center text-xl">
-                                Please enroll into a course
-                            </Text>
+                            <Card className="flex-col w-full">
+                                <Text className="text-center text-4xl">📚</Text>
+                                <Text className="text-headingColor text-center text-xl">
+                                    Please enroll into a course to view your details
+                                </Text>
+                            </Card>
+                            
                         </View>
                     )}
+                    {courses.length > 0 && (
                     <>
                         {/* courses */}
                         <View className="flex-1 ">
@@ -106,7 +110,7 @@ export default function StudentSignUpScreen() {
                             />
                         </Card>
                     </>
-                    
+                    )}
                 </View>
                 {/* third row */}
                 <View className="flex-row justify-between gap-3 p-3">

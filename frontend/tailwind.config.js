@@ -11,6 +11,7 @@ module.exports = {
         primaryColor: "#128C7E",
         border: "#1ABC9C",
         actionColor:'#1ABC9C',
+        completed: '#79A0A3',
       },
     },
   },
