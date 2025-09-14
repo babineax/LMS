@@ -14,11 +14,15 @@
     "react-native-gesture-handler": "~2.24.0",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
-    "react-native-screens": "~4.11.1"
+    "react-native-screens": "~4.11.1",
+    "react-dom": "19.0.0",
+    "react-native-web": "^0.20.0",
+    "@expo/metro-runtime": "~5.0.4"
   },
   "devDependencies": {
     "@react-native-community/cli": "^13.0.0",
     "@types/react": "^19.1.9",
-    "supabase": "^2.34.3"
+    "supabase": "^2.34.3",
+    "typescript": "~5.8.3"
   }
 }
