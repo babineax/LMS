@@ -8,6 +8,7 @@ const libraryRoutes = require("./routes/library.route");
 const bursaryRoutes = require("./routes/bursary.route");
 const morgan = require("morgan");
 const contentRoutes = require("./routes/content.routes");
+const assignmentRoutes = require("./routes/assignment.route");
 
 const app = express();
 app.use(express.json());
@@ -46,6 +47,7 @@ app.use("/api/library", libraryRoutes);
 app.use("/api/bursary", bursaryRoutes);
 app.use("/api/content", contentRoutes);
 app.use("/api/reports", require("./routes/reports"));
+app.use("/api/assignments", assignmentRoutes);
 
 // test route
 app.use("/api/notify", require("./routes/notifications"));
