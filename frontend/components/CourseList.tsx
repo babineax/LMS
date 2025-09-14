@@ -53,7 +53,7 @@ export const CourseList: React.FC<CourseListProps> = ({
               <TouchableOpacity
                 key={category}
                 onPress={() => setSelectedFilter(category)}
-                className={`px-4 py-2 rounded-full mr-2 ${
+                className={`px-3.5 py-2 rounded-lg mr-2 ${
                   selectedFilter === category
                     ? 'bg-teal-500'
                     : 'bg-white border border-gray-200'
@@ -77,7 +77,7 @@ export const CourseList: React.FC<CourseListProps> = ({
               <TouchableOpacity
                 key={level}
                 onPress={() => setSelectedLevel(level)}
-                className={`px-4 py-2 rounded-full mr-2 ${
+                className={`px-4 py-2 rounded-lg mr-2 ${
                   selectedLevel === level
                     ? 'bg-[#A1EBE5]'
                     : 'bg-white border border-gray-200'

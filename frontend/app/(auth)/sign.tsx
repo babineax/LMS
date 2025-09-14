@@ -238,7 +238,7 @@ export default function Index() {
             {isLoading ? (
               <ActivityIndicator color="white" />
             ) : (
-              <Text className="text-lg  text-white  font-semibold ml-1">Sign In</Text>
+              <Text className="text-lg text-[#2B876E] font-semibold ml-1">Sign In</Text>
             )}
           </TouchableOpacity>
         </View>

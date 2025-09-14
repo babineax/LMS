@@ -106,8 +106,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Load enrolled courses
   useEffect(() => {
     const loadEnrolledCourses = async () => {
+      if (!user) return
       try {
-        const enrolled= await AsyncStorage.getItem('courses')
+        const enrolled= await AsyncStorage.getItem(`courses_${user.id}`)
         if (enrolled) {
           setCourses(JSON.parse(enrolled))
         }
@@ -117,21 +118,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     loadEnrolledCourses()
-  },[])
+  },[user])
 
   // Save enrolled courses to AsyncStorage
   useEffect(() => {
-    if (courses.length === 0) return
+    if (!user || courses.length === 0) return
     const saveEnrolledCourses = async () => {
       try {
-        await AsyncStorage.setItem('courses', JSON.stringify(courses))
+        await AsyncStorage.setItem(`courses_${user.id}`, JSON.stringify(courses))
       } catch (error) {
         console.error('Error saving enrolled courses:', error)
       }
     }
 
     saveEnrolledCourses()
-  },[courses])
+  },[courses, user])
 
   //add course to enrolled courses
   const addCourse = (course: Course) => {
