@@ -20,19 +20,19 @@ type ShortAnswerQuestionProp = {
   correctAnswer: AnswerValue;
 };
 
-type MultipleChoiceQuestionType = {
-  id: string;
-  type: "multiple-choice";
-  actualQuestions: MultipleChoiceQuestionProp[];
-};
+// type MultipleChoiceQuestionType = {
+//   id: string;
+//   type: "multiple-choice";
+//   actualQuestions: MultipleChoiceQuestionProp[];
+// };
 
-type ShortAnswerQuestionType = {
-  id: string; 
-  type: "input-upload";
-  actualQuestions: ShortAnswerQuestionProp[];
-};
+// type ShortAnswerQuestionType = {
+//   id: string; 
+//   type: "input-upload";
+//   actualQuestions: ShortAnswerQuestionProp[];
+// };
 
-type Question = MultipleChoiceQuestionType | ShortAnswerQuestionType;
+// type Question = MultipleChoiceQuestionType | ShortAnswerQuestionType;
 
 type FlattenedQuestion = 
   | (MultipleChoiceQuestionProp & { type: "multiple-choice" })
