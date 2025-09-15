@@ -11,13 +11,17 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { LibraryAPI, useLibraryAPI } from "@/services/LibraryService";
-import { FrontendBook, FrontendBorrowedBook } from "@/types/types";
+import { AddUpdateDeleteBooksFormProps, FrontendBook, FrontendBorrowedBook } from "@/types/types";
 
-export const AddUpdateDeleteBooksForm: React.FC = () => {
-  const [books, setBooks] = useState<FrontendBook[]>([]);
-  const [borrowedBooks, setBorrowedBooks] = useState<FrontendBorrowedBook[]>(
-    []
-  );
+
+export const AddUpdateDeleteBooksForm: React.FC<AddUpdateDeleteBooksFormProps> = ({
+  books: propBooks,
+  onAddBook,
+  onUpdateBook,
+  onDeleteBook,
+}) => {
+  const [books, setBooks] = useState<FrontendBook[]>(propBooks || []);
+  const [borrowedBooks, setBorrowedBooks] = useState<FrontendBorrowedBook[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingBook, setEditingBook] = useState<FrontendBook | null>(null);
 
@@ -31,11 +35,20 @@ export const AddUpdateDeleteBooksForm: React.FC = () => {
 
   const { loading, error, executeWithLoading, clearError } = useLibraryAPI();
 
-  // Fetch library + borrowed books
+  // Update local books when props change
   useEffect(() => {
-    fetchBooks();
+    if (propBooks) {
+      setBooks(propBooks);
+    }
+  }, [propBooks]);
+
+  // Load data on mount if no books provided via props
+  useEffect(() => {
+    if (!propBooks || propBooks.length === 0) {
+      fetchBooks();
+    }
     fetchBorrowedBooks();
-  }, []);
+  }, [propBooks]);
 
   const fetchBooks = async () => {
     try {
@@ -77,39 +90,61 @@ export const AddUpdateDeleteBooksForm: React.FC = () => {
     }
 
     try {
+      const quantity = parseInt(formData.quantity || "1", 10);
+      const bookData = {
+        title: formData.title,
+        author: formData.author,
+        isbn: formData.isbn,
+        category: formData.category || "General",
+        quantity: quantity,
+        available: quantity,
+      };
+
       if (editingBook) {
-        const backendBook = await executeWithLoading(() =>
-          LibraryAPI.updateBook(editingBook.id, {
-            title: formData.title,
-            author: formData.author,
-            isbn: formData.isbn,
-            total_quantity: parseInt(formData.quantity) || 1,
-            category: formData.category,
-          })
-        );
-        const updatedBook = LibraryAPI.transformBookData(backendBook);
-        setBooks((prev) =>
-          prev.map((b) => (b.id === editingBook.id ? updatedBook : b))
-        );
+        // Use parent handler if provided, otherwise handle locally
+        if (onUpdateBook) {
+          await onUpdateBook(editingBook.id, bookData);
+        } else {
+          const backendBook = await executeWithLoading(() =>
+            LibraryAPI.updateBook(editingBook.id, {
+              title: formData.title,
+              author: formData.author,
+              isbn: formData.isbn,
+              total_quantity: parseInt(formData.quantity || "1", 10),
+              category: formData.category || "General",
+            })
+          );
+
+          const updatedBook = LibraryAPI.transformBookData(backendBook);
+          setBooks((prev) =>
+            prev.map((b) => (b.id === editingBook.id ? updatedBook : b))
+          );
+        }
       } else {
-        const backendBook = await executeWithLoading(() =>
-          LibraryAPI.addBook({
-            title: formData.title,
-            author: formData.author,
-            isbn: formData.isbn,
-            total_quantity: parseInt(formData.quantity) || 1,
-            institution_id: "123", // TODO: replace with dynamic institution_id
-            category: formData.category,
-          })
-        );
-        const newBook = LibraryAPI.transformBookData(backendBook);
-        setBooks((prev) => [...prev, newBook]);
+        // parent handler if provided, otherwise handle locally
+        if (onAddBook) {
+          await onAddBook(bookData);
+        } else {
+          const backendBook = await executeWithLoading(() =>
+            LibraryAPI.addBook({
+              title: formData.title,
+              author: formData.author,
+              isbn: formData.isbn,
+              total_quantity: parseInt(formData.quantity || "1", 10),
+              category: formData.category || "General",
+            })
+          );
+
+          const newBook = LibraryAPI.transformBookData(backendBook);
+          setBooks((prev) => [...prev, newBook]);
+        }
       }
 
       resetForm();
       setModalVisible(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Submit failed:", err);
+      Alert.alert("Error", err.message || "Failed to save book");
     }
   };
 
@@ -133,8 +168,13 @@ export const AddUpdateDeleteBooksForm: React.FC = () => {
         style: "destructive",
         onPress: async () => {
           try {
-            await executeWithLoading(() => LibraryAPI.deleteBook(book.id));
-            setBooks((prev) => prev.filter((b) => b.id !== book.id));
+            // Use handler if provided, otherwise handle locally
+            if (onDeleteBook) {
+              onDeleteBook(book.id);
+            } else {
+              await executeWithLoading(() => LibraryAPI.deleteBook(book.id));
+              setBooks((prev) => prev.filter((b) => b.id !== book.id));
+            }
           } catch (err) {
             console.error("Delete failed:", err);
           }
@@ -143,7 +183,7 @@ export const AddUpdateDeleteBooksForm: React.FC = () => {
     ]);
   };
 
-  // Render book item
+  // Render book card
   const renderBookItem = (book: FrontendBook, borrowed = false) => (
     <View
       key={book.id}
@@ -166,24 +206,22 @@ export const AddUpdateDeleteBooksForm: React.FC = () => {
           </View>
         </View>
 
-        <View className="flex-row">
-          {!borrowed && (
+        {!borrowed && (
+          <View className="flex-row">
             <TouchableOpacity
               className="bg-teal-100 p-2 rounded-lg mr-2"
               onPress={() => handleEdit(book)}
             >
               <Ionicons name="pencil" size={16} color="#128C7E" />
             </TouchableOpacity>
-          )}
-          {!borrowed && (
             <TouchableOpacity
               className="bg-red-100 p-2 rounded-lg"
               onPress={() => handleDelete(book)}
             >
               <Ionicons name="trash" size={16} color="#EF4444" />
             </TouchableOpacity>
-          )}
-        </View>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -295,82 +333,48 @@ export const AddUpdateDeleteBooksForm: React.FC = () => {
 
           <ScrollView className="flex-1 p-4">
             {/* Title */}
-            <View className="mb-4">
-              <Text className="text-sm font-medium text-slate-700 mb-2">
-                Book Title *
-              </Text>
-              <TextInput
-                className="bg-gray-50 border border-gray-200 rounded-lg p-3"
-                value={formData.title}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, title: text })
-                }
-                placeholder="Enter book title"
-              />
-            </View>
-
+            <TextInput
+              className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4"
+              value={formData.title}
+              onChangeText={(text) => setFormData({ ...formData, title: text })}
+              placeholder="Book Title *"
+            />
             {/* Author */}
-            <View className="mb-4">
-              <Text className="text-sm font-medium text-slate-700 mb-2">
-                Author *
-              </Text>
-              <TextInput
-                className="bg-gray-50 border border-gray-200 rounded-lg p-3"
-                value={formData.author}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, author: text })
-                }
-                placeholder="Enter author name"
-              />
-            </View>
-
+            <TextInput
+              className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4"
+              value={formData.author}
+              onChangeText={(text) =>
+                setFormData({ ...formData, author: text })
+              }
+              placeholder="Author *"
+            />
             {/* ISBN */}
-            <View className="mb-4">
-              <Text className="text-sm font-medium text-slate-700 mb-2">
-                ISBN *
-              </Text>
-              <TextInput
-                className="bg-gray-50 border border-gray-200 rounded-lg p-3"
-                value={formData.isbn}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, isbn: text })
-                }
-                placeholder="Enter ISBN"
-              />
-            </View>
-
+            <TextInput
+              className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4"
+              value={formData.isbn}
+              onChangeText={(text) => setFormData({ ...formData, isbn: text })}
+              placeholder="ISBN *"
+            />
             {/* Category */}
-            <View className="mb-4">
-              <Text className="text-sm font-medium text-slate-700 mb-2">
-                Category
-              </Text>
-              <TextInput
-                className="bg-gray-50 border border-gray-200 rounded-lg p-3"
-                value={formData.category}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, category: text })
-                }
-                placeholder="Enter category (e.g., Fiction, Science)"
-              />
-            </View>
-
+            <TextInput
+              className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-4"
+              value={formData.category}
+              onChangeText={(text) =>
+                setFormData({ ...formData, category: text })
+              }
+              placeholder="Category (optional)"
+            />
             {/* Quantity */}
-            <View className="mb-6">
-              <Text className="text-sm font-medium text-slate-700 mb-2">
-                Quantity
-              </Text>
-              <TextInput
-                className="bg-gray-50 border border-gray-200 rounded-lg p-3"
-                value={formData.quantity}
-                onChangeText={(text) =>
-                  setFormData({ ...formData, quantity: text })
-                }
-                placeholder="Enter quantity"
-                keyboardType="numeric"
-              />
-            </View>
+            <TextInput
+              className="bg-gray-50 border border-gray-200 rounded-lg p-3 mb-6"
+              value={formData.quantity}
+              onChangeText={(text) =>
+                setFormData({ ...formData, quantity: text })
+              }
+              placeholder="Quantity"
+              keyboardType="numeric"
+            />
 
-            {/* Submit */}
             <TouchableOpacity
               className="bg-teal-600 p-4 rounded-lg"
               onPress={handleSubmit}
