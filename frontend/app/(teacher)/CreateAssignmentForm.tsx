@@ -28,7 +28,7 @@ const CreateAssignmentForm: React.FC<CreateAssignmentFormProps> = ({
   const [title, setTitle] = useState("");
   const [question, setQuestion] = useState("");
   const [dueDate, setDueDate] = useState("");
-
+  const token = useAuth();
   const handleSubmit = async () => {
     if (!title || !question || !dueDate) {
       Alert.alert("Error", "Please fill in all required fields");
@@ -45,8 +45,6 @@ const CreateAssignmentForm: React.FC<CreateAssignmentFormProps> = ({
         deadline: dueDate,
         attachment_url: selectedFile || null,
       };
-
-      const token =  useAuth();
 
       const res = await api.post("/assignments", payload, {
         headers: { Authorization: `Bearer ${token}` },
