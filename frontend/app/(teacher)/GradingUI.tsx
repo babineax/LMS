@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { gradeSubmission, getSubmissions } from "@/services/assignments";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,10 +8,11 @@ import {
   ScrollView,
   FlatList,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 
 interface Student {
-  id: string;
+  submission_id: string;
   name: string;
   submittedAt: string;
   score: number | null;
@@ -30,59 +32,55 @@ interface Assignment {
 interface GradingUIProps {
   courseId: string | null;
   onClose: () => void;
+  token: string;
 }
 
-const GradingUI: React.FC<GradingUIProps> = ({ courseId, onClose }) => {
-  const [selectedAssignment] = useState<Assignment>({
-    id: "1",
-    title: "Chapter 5 Quiz - Algebra",
-    subject: "Mathematics",
-    dueDate: "2024-03-15",
-    totalPoints: 100,
-  });
-
-  const [students, setStudents] = useState<Student[]>([
-    {
-      id: "1",
-      name: "Sarah Johnson",
-      submittedAt: "2024-03-14 14:30",
-      score: 85,
-      maxScore: 100,
-      status: "graded",
-      feedback: "Great work! Minor calculation error in question 3.",
-    },
-    {
-      id: "2",
-      name: "Michael Chen",
-      submittedAt: "2024-03-15 09:15",
-      score: null,
-      maxScore: 100,
-      status: "pending",
-      feedback: "",
-    },
-    {
-      id: "3",
-      name: "Emily Davis",
-      submittedAt: "2024-03-16 10:20",
-      score: null,
-      maxScore: 100,
-      status: "late",
-      feedback: "",
-    },
-    {
-      id: "4",
-      name: "James Wilson",
-      submittedAt: "2024-03-14 16:45",
-      score: 92,
-      maxScore: 100,
-      status: "graded",
-      feedback: "Excellent understanding of concepts!",
-    },
-  ]);
+const GradingUI: React.FC<GradingUIProps> = ({ courseId, onClose, token }) => {
+  const [loading, setLoading] = useState(true);
+  const [students, setStudents] = useState<Student[]>([]);
+  const [selectedAssignment, setSelectedAssignment] =
+    useState<Assignment | null>(null);
 
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [currentScore, setCurrentScore] = useState<string>("");
   const [currentFeedback, setCurrentFeedback] = useState<string>("");
+
+  // Fetching submissions + assignment
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        const data = await getSubmissions(token, courseId);
+
+        // map backend payload into UI-friendly format
+        const formatted: Student[] = data.submissions.map((s: any) => ({
+          id: s.submission_id,
+          name: s.student_name,
+          submittedAt: s.submitted_at,
+          score: s.score,
+          maxScore: s.max_score,
+          status: s.status,
+          feedback: s.feedback || "",
+        }));
+
+        setStudents(formatted);
+        setSelectedAssignment({
+          id: data.assignment.id,
+          title: data.assignment.title,
+          subject: data.assignment.subject,
+          dueDate: data.assignment.due_date,
+          totalPoints: data.assignment.total_points,
+        });
+      } catch (err: any) {
+        Alert.alert("Error", err.message || "Failed to load submissions");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (courseId) fetchData();
+  }, [courseId, token]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -103,7 +101,7 @@ const GradingUI: React.FC<GradingUIProps> = ({ courseId, onClose }) => {
     setCurrentFeedback(student.feedback);
   };
 
-  const handleSaveGrade = () => {
+  const handleSaveGrade = async () => {
     if (!selectedStudent || !currentScore) {
       Alert.alert("Error", "Please enter a score");
       return;
@@ -118,23 +116,29 @@ const GradingUI: React.FC<GradingUIProps> = ({ courseId, onClose }) => {
       return;
     }
 
-    setStudents((prev) =>
-      prev.map((student) =>
-        student.id === selectedStudent.id
-          ? {
-              ...student,
-              score,
-              feedback: currentFeedback,
-              status: "graded" as const,
-            }
-          : student
-      )
-    );
+    try {
+      await gradeSubmission(
+        token,
+        selectedStudent.submission_id,
+        score,
+        currentFeedback
+      );
 
-    Alert.alert("Success", "Grade saved successfully!");
-    setSelectedStudent(null);
-    setCurrentScore("");
-    setCurrentFeedback("");
+      setStudents((prev) =>
+        prev.map((student) =>
+          student.submission_id === selectedStudent.submission_id
+            ? { ...student, score, feedback: currentFeedback, status: "graded" }
+            : student
+        )
+      );
+
+      Alert.alert("Success", "Grade saved successfully!");
+      setSelectedStudent(null);
+      setCurrentScore("");
+      setCurrentFeedback("");
+    } catch (err: any) {
+      Alert.alert("Error", err.message);
+    }
   };
 
   const getGradedCount = () =>
@@ -187,6 +191,22 @@ const GradingUI: React.FC<GradingUIProps> = ({ courseId, onClose }) => {
     </TouchableOpacity>
   );
 
+  if (loading) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <ActivityIndicator size="large" color="#1ABC9C" />
+      </View>
+    );
+  }
+
+  if (!selectedAssignment) {
+    return (
+      <View className="flex-1 items-center justify-center">
+        <Text>No assignment data available</Text>
+      </View>
+    );
+  }
+
   return (
     <View className="flex-1" style={{ backgroundColor: "#F1FFF8" }}>
       {/* Header */}
@@ -227,7 +247,7 @@ const GradingUI: React.FC<GradingUIProps> = ({ courseId, onClose }) => {
         </View>
       </View>
 
-      {/* Student List */}
+      {/* Student List / Grading Panel */}
       {!selectedStudent ? (
         <View className="flex-1 px-6 py-4">
           <Text className="text-xl font-bold mb-4" style={{ color: "#2C3E50" }}>
@@ -235,7 +255,7 @@ const GradingUI: React.FC<GradingUIProps> = ({ courseId, onClose }) => {
           </Text>
           <FlatList
             data={students}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.submission_id}
             renderItem={renderStudentItem}
             showsVerticalScrollIndicator={false}
           />
@@ -297,8 +317,8 @@ const GradingUI: React.FC<GradingUIProps> = ({ courseId, onClose }) => {
               Student's Submission
             </Text>
             <Text className="text-base leading-6" style={{ color: "#2C3E50" }}>
-              [Assignment content would be displayed here - could be text
-              responses, uploaded files, etc.]
+              [Assignment content would be displayed here - text, file links,
+              etc.]
             </Text>
           </View>
 
