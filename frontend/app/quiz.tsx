@@ -20,44 +20,14 @@ type ShortAnswerQuestionProp = {
   correctAnswer: AnswerValue;
 };
 
-// type MultipleChoiceQuestionType = {
-//   id: string;
-//   type: "multiple-choice";
-//   actualQuestions: MultipleChoiceQuestionProp[];
-// };
-
-// type ShortAnswerQuestionType = {
-//   id: string; 
-//   type: "input-upload";
-//   actualQuestions: ShortAnswerQuestionProp[];
-// };
-
-// type Question = MultipleChoiceQuestionType | ShortAnswerQuestionType;
-
 type FlattenedQuestion = 
   | (MultipleChoiceQuestionProp & { type: "multiple-choice" })
   | (ShortAnswerQuestionProp & { type: "input-upload" });
 
-// type FlattenedMultipleChoice = {
-//   type: "multiple-choice";
-//   question: string;
-//   options: string[];
-//   correctAnswer: string;
-// };
-
-// type FlattenedInputUpload = {
-//   type: "input-upload";
-//   question: string;
-//   correctAnswer: null;
-// };
-
-// type FlattenedQuestion = FlattenedMultipleChoice | FlattenedInputUpload;
-
-
 
 const questions = [
   {
-    id: "1",
+    id: "3",
     type: "multiple-choice",
     actualQuestions: [
       {
@@ -109,6 +79,8 @@ export default function Quiz() {
 
     const course = courses.find((c) => c.id === courseId);
     const lesson = course?.lessons.find((l) => l.id === lessonId);
+    console.log('lesson',lesson);
+    
     const initialDuration = parseDuration(lesson?.duration);
     const [timeLeft, setTimeLeft] = useState(initialDuration);
 
@@ -116,12 +88,14 @@ export default function Quiz() {
     const start = page * perPage;
     const end = start + perPage;
     
-    const flattenedQuestions: FlattenedQuestion[] = questions.flatMap((group) =>
+    const flattenedQuestions: FlattenedQuestion[] = questions.filter(q => q.id === lessonId).flatMap((group) =>
       group.actualQuestions.map((q) => ({
         ...q,
         type: group.type,
       } as FlattenedQuestion))
     );
+
+    console.log('flattenedQuestions',flattenedQuestions);
     
     const currentQuestions = flattenedQuestions.slice(start, end);
 
@@ -240,7 +214,7 @@ export default function Quiz() {
             </TouchableOpacity>
           )}
 
-          {end < questions.length ? (
+          {end < flattenedQuestions.length ? (
             <TouchableOpacity
               onPress={() => setPage(page + 1)}
               className="px-10 py-3 bg-primaryColor rounded-lg"
@@ -262,7 +236,7 @@ export default function Quiz() {
         {submitted && (
           <View>
               <Text className="mt-4 text-center font-bold text-lg">
-              Final Score: {score}/{questions.length}
+              Final Score: {score}/{flattenedQuestions.length}
             </Text>
             <View className="mt-4">
               <TouchableOpacity

@@ -1,6 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
+import { File, Image } from "lucide-react-native";
 
 interface QuestionProps {
   index: number;
@@ -69,6 +70,7 @@ export default function InputQuestion({
     }
   };
 
+
   return (
     <View className="bg-bgLight rounded-2xl p-4 shadow-md mb-4">
       {/* Question */}
@@ -96,24 +98,26 @@ export default function InputQuestion({
             onChangeText={(text) => onInput?.(index, text)}
           />
 
-          <Text className="text-center text-gray-500">OR</Text>
+          {/* <Text className="text-center text-gray-500">OR</Text> */}
 
           {/* Upload buttons */}
-          <View className="flex-row justify-between">
+          <View className=" py-4">
             <TouchableOpacity
-              className="flex-1 bg-primaryColor p-3 rounded-xl mx-1"
+              className="flex-1 border border-gray-300 h-20 p-3 rounded-xl mx-1"
               onPress={pickDocument}
               disabled={submitted}
             >
-              <Text className="text-white text-center">Upload Document</Text>
+              <File size={24} color="#6B7280" />
+              <Text className="text-headingColor text-center">Upload Document</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="flex-1 bg-secondaryColor p-3 rounded-xl mx-1"
+              className="flex-1 border  border-gray-300 h-20 p-3 rounded-xl mx-1 my-3"
               onPress={pickImage}
               disabled={submitted}
             >
-              <Text className="text-white text-center">Upload Image</Text>
+              <Image size={24} color="#6B7280" />
+              <Text className="text-headingColor text-center">Upload Image</Text>
             </TouchableOpacity>
           </View>
 

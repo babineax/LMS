@@ -48,25 +48,25 @@ export interface StatsData {
   description?: string;
 }
 
-// export interface CourseFormDat {
-//   title: string;
-//   description: string;
-//   shortDescription: string;
-//   category: string;
-//   level: string;
-//   language: string;
-//   price: string;
-//   duration: string;
-//   maxStudents: string;
-//   startDate: string;
-//   tags: string[];
-//   prerequisites: string;
-//   learningOutcomes: string[];
-//   courseImage: string | null;
-//   isPublic: boolean;
-//   allowDiscussions: boolean;
-//   certificateEnabled: boolean;
-// }
+export interface CourseFormData {
+  title: string;
+  description: string;
+  shortDescription: string;
+  category: string;
+  level: string;
+  language: string;
+  price: string;
+  duration: string;
+  maxStudents: string;
+  startDate: string;
+  tags: string[];
+  prerequisites: string;
+  learningOutcomes: string[];
+  courseImage: string | null;
+  isPublic: boolean;
+  allowDiscussions: boolean;
+  certificateEnabled: boolean;
+}
 
 // ----------------------
 // Table-related types
@@ -95,13 +95,13 @@ export interface ImageUploadProp {
   onImageSelect: (uri: string | null) => void;
 }
 
-// export interface SettingsToggleProps {
-//   icon: keyof typeof Ionicons.glyphMap;
-//   title: string;
-//   description: string;
-//   value: boolean;
-//   onValueChange: (value: boolean) => void;
-// }
+export interface SettingsToggleProps {
+  icon: keyof typeof Ionicons.glyphMap;
+  title: string;
+  description: string;
+  value: boolean;
+  onValueChange: (value: boolean) => void;
+}
 
 export interface IconInputProps extends TextInputProps {
   iconName: keyof typeof Ionicons.glyphMap;

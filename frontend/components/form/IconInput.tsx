@@ -1,19 +1,18 @@
 import {
   View,
+  Text,
   TextInput,
-  TextInputProps,
   TouchableOpacity,
   Image,
   Alert,
+  Switch,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { Text } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Switch } from "react-native";
 import {
   IconInputProps,
-  ImageUploadProps,
+  ImageUploadProp,
   LearningOutcomesProps,
   SettingsToggleProps,
   TagInputProps,
@@ -148,28 +147,29 @@ export const LearningOutcomes: React.FC<LearningOutcomesProps> = ({
 };
 
 // Image upload
-export const ImageUpload: React.FC<ImageUploadProps> = ({
+export const ImageUpload: React.FC<ImageUploadProp> = ({
   imageUri,
   onImageSelect,
 }) => {
   const pickImage = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Permission needed", "Please grant camera roll permissions");
-      return;
-    }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ["images"],
       allowsEditing: true,
       aspect: [16, 9],
       quality: 0.8,
     });
+  
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+        const asset = result.assets[0];
 
-    if (!result.canceled && result.assets?.[0]?.uri) {
-      onImageSelect(result.assets[0].uri);
-    }
+        console.log(asset);
+        // Save local URI only for preview
+        onImageSelect(asset.uri);
+      }
+  
   };
+  console.log(imageUri);
 
   return (
     <TouchableOpacity
@@ -183,13 +183,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             className="w-full h-48 rounded-lg"
             resizeMode="cover"
           />
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => onImageSelect(null)}
             className="absolute -top-2 -right-2 p-1 rounded-full"
             style={{ backgroundColor: "#EF4444" }}
           >
             <Ionicons name="close" size={16} color="white" />
-          </TouchableOpacity>
+          </TouchableOpacity>  */}
+          <Text>File Name</Text>
         </View>
       ) : (
         <View className="items-center">

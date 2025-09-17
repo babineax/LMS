@@ -228,7 +228,7 @@ const CreateCourse = () => {
           </FormSection>
 
           {/* Submit Buttons */}
-          <View className="space-y-4">
+          <View className="space-y-4 gap-2">
             <TouchableOpacity
               className="w-full py-4 border border-gray-200 rounded-lg items-center"
               onPress={saveDraft}

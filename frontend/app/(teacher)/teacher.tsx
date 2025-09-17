@@ -140,46 +140,52 @@ const TeachersDashboard: React.FC = () => {
   return (
     <SafeAreaView className="flex-1 bg-[#F1FFF8]">
       <StatusBar barStyle="dark-content" backgroundColor="#F1FFF8" />
-
-      {/* Header */}
-      <View className="px-6 pt-4 pb-2">
-        <Text className="text-2xl font-bold text-[#2C3E50] mb-1">
-          Teachers Dashboard
-        </Text>
-        <Text className="text-gray-600 text-sm">
-          Welcome back! Here&apos;s what&apos;s happening with your courses.
-        </Text>
-      </View>
-
-      {/* Navigation Tabs */}
-      <View className="bg-white mx-6 rounded-lg p-1 mb-4 shadow-sm">
-        <View className="flex-row">
-          <TabButton
-            label="Overview"
-            icon="analytics"
-            isActive={activeTab === "overview"}
-            onPress={() => setActiveTab("overview")}
-          />
-          <TabButton
-            label="Courses"
-            icon="book"
-            isActive={activeTab === "courses"}
-            onPress={() => setActiveTab("courses")}
-          />
-          <TabButton
-            label="Students"
-            icon="people"
-            isActive={activeTab === "students"}
-            onPress={() => setActiveTab("students")}
-          />
-          <TabButton
-            label="Analytics"
-            icon="bar-chart"
-            isActive={activeTab === "analytics"}
-            onPress={() => setActiveTab("analytics")}
-          />
+      <View className="py-6">
+        {/* Header */}
+        <View className="px-6 pt-4 pb-2">
+          <Text className="text-2xl font-bold text-[#2C3E50] mb-1">
+            Teachers Dashboard
+          </Text>
+          <Text className="text-gray-600 text-sm">
+            Welcome back! Here&apos;s what&apos;s happening with your courses.
+          </Text>
         </View>
+
+        {/* Navigation Tabs */}
+        <View className="bg-white mx-6 rounded-lg p-1 mb-4 shadow-sm">
+          <View className="flex-row">
+            <TabButton
+              label="Overview"
+              icon="analytics"
+              isActive={activeTab === "overview"}
+              onPress={() => setActiveTab("overview")}
+            />
+            <TabButton
+              label="Courses"
+              icon="book"
+              isActive={activeTab === "courses"}
+              onPress={() => setActiveTab("courses")}
+            />
+            <TabButton
+              label="Students"
+              icon="people"
+              isActive={activeTab === "students"}
+              onPress={() => setActiveTab("students")}
+            />
+            <TabButton
+              label="Analytics"
+              icon="bar-chart"
+              isActive={activeTab === "analytics"}
+              onPress={() => setActiveTab("analytics")}
+            />
+          </View>
+        </View>
+
+        
       </View>
+      
+
+      
 
       {/* Content */}
       <ScrollView className="flex-1 px-6" showsVerticalScrollIndicator={false}>

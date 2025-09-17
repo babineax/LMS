@@ -10,7 +10,6 @@ import { router } from "expo-router";
 
 export default function Index() {
   return (
-    // Entire app wrapped inside SafeAreaProvider and SafeAreaView to prevent UI overlap with device notches.
     <SafeAreaProvider>
       <StatusBar barStyle="dark-content" className="bg-bgLight" />
       <SafeAreaView className="flex-1">
@@ -38,13 +37,13 @@ export default function Index() {
                 <Text>Admin</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push("/teacher")}>
+            <TouchableOpacity onPress={() => router.push("/(auth)/signUp?role=teacher")}>
               <View className="items-center p-4 ">
                 <UserCheck size={100} color="#1ABC9C" />
                 <Text>Teacher</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push("/(auth)/sign")}>
+            <TouchableOpacity onPress={() => router.push("/(auth)/sign?role=student")}>
               <View className="items-center p-4 ">
                 <GraduationCap size={100} color="#1ABC9C" />
                 <Text>Student</Text>
