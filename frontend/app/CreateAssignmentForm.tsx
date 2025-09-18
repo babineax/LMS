@@ -72,7 +72,7 @@ const CreateAssignmentForm: React.FC<CreateAssignmentFormProps> = ({
       <View className="px-6 py-8">
         {/* Header */}
         <View className="flex-row justify-between items-center mb-8">
-          <Text className="text-2xl font-bold" style={{ color: "#2C3E50" }}>
+          <Text className="text-2xl font-semibold" style={{ color: "#2C3E50" }}>
             Create Assignment
           </Text>
           {onClose && (
@@ -85,20 +85,21 @@ const CreateAssignmentForm: React.FC<CreateAssignmentFormProps> = ({
         {/* Title */}
         <View className="mb-6">
           <Text
-            className="text-lg font-semibold mb-2"
+            className="text-base font-semibold mb-2"
             style={{ color: "#2C3E50" }}
           >
             Title *
           </Text>
           <TextInput
-            className="p-4 rounded-xl border-2 text-base"
+            className="p-4 rounded-xl border-hairline text-base"
             style={{
               borderColor: "#D0E8E6",
               backgroundColor: "#FFFFFF",
               color: "#2C3E50",
             }}
             placeholder="Enter assignment title"
-            placeholderTextColor="#A1EBE5"
+            placeholderTextColor="#2C3E50"
+            placeholderClassName="font-thin"
             value={title}
             onChangeText={setTitle}
           />
@@ -107,13 +108,13 @@ const CreateAssignmentForm: React.FC<CreateAssignmentFormProps> = ({
         {/* Question */}
         <View className="mb-6">
           <Text
-            className="text-lg font-semibold mb-2"
+            className="text-base font-semibold mb-2"
             style={{ color: "#2C3E50" }}
           >
             Question *
           </Text>
           <TextInput
-            className="p-4 rounded-xl border-2 text-base"
+            className="p-4 rounded-xl border-hairline text-base"
             style={{
               borderColor: "#D0E8E6",
               backgroundColor: "#FFFFFF",
@@ -121,7 +122,8 @@ const CreateAssignmentForm: React.FC<CreateAssignmentFormProps> = ({
               height: 120,
             }}
             placeholder="Enter assignment question"
-            placeholderTextColor="#A1EBE5"
+            placeholderTextColor="#2C3E50"
+            placeholderClassName="font-thin"
             multiline
             textAlignVertical="top"
             value={question}
@@ -132,20 +134,21 @@ const CreateAssignmentForm: React.FC<CreateAssignmentFormProps> = ({
         {/* Due Date */}
         <View className="mb-6">
           <Text
-            className="text-lg font-semibold mb-2"
+            className="text-base font-semibold mb-2"
             style={{ color: "#2C3E50" }}
           >
             Due Date *
           </Text>
           <TextInput
-            className="p-4 rounded-xl border-2 text-base"
+            className="p-4 rounded-xl border-hairline text-base"
             style={{
               borderColor: "#D0E8E6",
               backgroundColor: "#FFFFFF",
               color: "#2C3E50",
             }}
             placeholder="YYYY-MM-DD"
-            placeholderTextColor="#A1EBE5"
+            placeholderTextColor="#2C3E50"
+            placeholderClassName="font-thin"
             value={dueDate}
             onChangeText={setDueDate}
           />
@@ -154,13 +157,13 @@ const CreateAssignmentForm: React.FC<CreateAssignmentFormProps> = ({
         {/* Upload */}
         <View className="mb-6">
           <Text
-            className="text-lg font-semibold mb-2"
+            className="text-base font-semibold mb-2"
             style={{ color: "#2C3E50" }}
           >
             Attachment (optional)
           </Text>
           <TouchableOpacity
-            className="p-4 rounded-xl border-2 border-dashed items-center justify-center"
+            className="p-4 rounded-xl border-hairline border-dashed items-center justify-center"
             style={{
               borderColor: "#1ABC9C",
               backgroundColor: "#FFFFFF",

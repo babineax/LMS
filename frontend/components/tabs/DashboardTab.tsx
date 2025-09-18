@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { TabButton } from "../element/TabButton";
+import { TabButton } from "../../app/element/TabButton";
 
 interface DashboardTabsProps {
   activeTab: "overview" | "courses" | "students" | "analytics";

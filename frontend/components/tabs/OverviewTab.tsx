@@ -1,15 +1,15 @@
 import React from "react";
 import { View, Text } from "react-native";
-import { StatCard } from "../element/StatCard";
-import { recentActivity, stats, upcomingEvents } from "../data/mockData";
-import { ActivityItem } from "../element/ActivityItem";
-import { EventItem } from "../element/EventItem";
+import { StatCard } from "../../app/element/StatCard";
+import { recentActivity, stats, upcomingEvents } from "../../app/data/mockData";
+import { ActivityItem } from "../../app/element/ActivityItem";
+import { EventItem } from "../../app/element/EventItem";
 
 const OverviewTab: React.FC = () => {
   return (
     <View className="pb-6">
       {/* Stats Grid */}
-      <View className="flex-row mb-6">
+      <View className="flex-row my-6">
         <View className="flex-1">
           <View className="flex-row mb-2">
             <StatCard {...stats[0]} />

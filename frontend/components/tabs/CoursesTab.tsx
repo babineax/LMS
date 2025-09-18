@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Modal } from "react-native";
+import { View, Text, TouchableOpacity, Modal, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { courses } from "../data/mockData";
-import { CourseCard } from "../element/CourseCard";
-import CreateAssignmentForm from "../CreateAssignmentForm";
-import GradingUI from "../GradingUI";
+import { courses } from "../../app/data/mockData";
+import { CourseCard } from "../../app/element/CourseCard";
+import CreateAssignmentForm from "../../app/CreateAssignmentForm";
+import GradingUI from "../../app/GradingUI";
 import { useAuth } from "@/contexts/AuthContext";
 
 const CoursesTab: React.FC = () => {
@@ -26,9 +26,11 @@ const CoursesTab: React.FC = () => {
   };
 
   return (
-    <View className="pb-6">
+    <ScrollView 
+    showsVerticalScrollIndicator={false}
+    className="py-6">
       {/* Header with Action Buttons */}
-      <View className="flex-row justify-between p-2 items-center mb-6">
+      <View className="flex-row justify-between p-2 items-center my-6">
         <Text className="text-[20px] font-bold text-[#2C3E50]">My Courses</Text>
         <View className="flex-row gap-2">
           {/* Create Assignment button */}
@@ -45,7 +47,7 @@ const CoursesTab: React.FC = () => {
           {/* New Course button */}
           <TouchableOpacity
             className="bg-[#16A085] px-4 py-2 rounded-lg flex-row items-center"
-            onPress={() => router.push("(admin)/CreateCourse")}
+            onPress={() => router.push("/(admin)/CreateCourse")}
           >
             <Ionicons name="add" size={16} color="white" />
             <Text className="text-white font-medium ml-1 text-sm">
@@ -75,7 +77,7 @@ const CoursesTab: React.FC = () => {
             handleCreateAssignment(course.id.toString())
           }
           onGradeWork={() => handleOpenGrading(course.id.toString())}
-          onViewCourse={() => router.push(`(admin)/course/${course.id}`)}
+          onViewCourse={() => router.push(`/(admin)/course/${course.id}`)}
           onEditCourse={() => router.push(`(admin)/edit-course/${course.id}`)}
         />
       ))}
@@ -108,7 +110,7 @@ const CoursesTab: React.FC = () => {
           />
         </View>
       </Modal>
-    </View>
+    </ScrollView>
   );
 };
 

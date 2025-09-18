@@ -50,7 +50,7 @@ const CreateCourse = () => {
       >
         <View className="px-6 py-8">
           {/* Header */}
-          <View className="mb-8">
+          <View className="mb-8 mt-4">
             <View className="flex-row items-center mb-2">
               <View
                 className="p-3 rounded-xl mr-3"

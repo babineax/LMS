@@ -20,13 +20,13 @@ import {
 
 export const IconInput: React.FC<IconInputProps> = ({ iconName, ...props }) => {
   return (
-    <View className="flex-row items-center border border-gray-200 rounded-lg">
+    <View className="flex-row items-center border-hairline border-headingColor rounded-lg">
       <View className="px-3">
-        <Ionicons name={iconName} size={20} color="#6B7280" />
+        <Ionicons name={iconName} size={14} color="#6B7280" />
       </View>
       <TextInput
         className="flex-1 py-3 pr-4"
-        style={{ fontSize: 16 }}
+        style={{ fontSize: 14 }}
         {...props}
       />
     </View>
@@ -88,8 +88,9 @@ export const TagInput: React.FC<TagInputProps> = ({
           value={currentTag}
           onChangeText={setCurrentTag}
           placeholder="Add a tag"
-          className="flex-1 px-4 py-3 border border-gray-200 rounded-lg mr-2"
-          style={{ fontSize: 16 }}
+          placeholderTextColor={"#2C3E50"}
+          className="flex-1 px-4 py-3 border-hairline border-headingColor rounded-lg mr-2"
+          style={{ fontSize: 14 }}
           onSubmitEditing={handleAddTag}
         />
         <TouchableOpacity
@@ -174,7 +175,7 @@ export const ImageUpload: React.FC<ImageUploadProp> = ({
   return (
     <TouchableOpacity
       onPress={pickImage}
-      className="border-2 border-dashed border-gray-200 rounded-lg p-8 items-center"
+      className="border-hairline border-dashed border-headingColor rounded-lg p-8 items-center"
     >
       {imageUri ? (
         <View className="relative">

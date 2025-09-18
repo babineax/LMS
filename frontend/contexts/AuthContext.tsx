@@ -88,35 +88,52 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     // Initial session check
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setToken(session?.access_token ?? null);
-      if (session?.user) {
-        loadUserProfile(session.user.id);
-      }
-      setLoading(false);
-    });
+    // supabase.auth.getSession().then(({ data: { session } }) => {
+    //   setSession(session);
+    //   setUser(session?.user ?? null);
+    //   setToken(session?.access_token ?? null);
+    //   if (session?.user) {
+    //     loadUserProfile(session.user.id);
+    //   }
+    //   setLoading(false);
+    // });
 
-    // Listen for auth state changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("Auth event:", event);
-      setSession(session);
-      setUser(session?.user ?? null);
-      setToken(session?.access_token ?? null);
+    // // Listen for auth state changes
+    // const {
+    //   data: { subscription },
+    // } = supabase.auth.onAuthStateChange(async (event, session) => {
+    //   console.log("Auth event:", event);
+    //   setSession(session);
+    //   setUser(session?.user ?? null);
+    //   setToken(session?.access_token ?? null);
 
-      if (session?.user) {
-        await loadUserProfile(session.user.id);
-      } else {
-        setProfile(null);
-      }
+    //   if (session?.user) {
+    //     await loadUserProfile(session.user.id);
+    //   } else {
+    //     setProfile(null);
+    //   }
 
-      setLoading(false);
-    });
+    //   setLoading(false);
+    // });
+    const getSession = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      setUser(session.user); // Restore user into context
+    }
+    setLoading(false);
+  };
 
-    return () => subscription.unsubscribe();
+  getSession();
+
+  // Optional: listen for session changes (login, logout, token refresh)
+  const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+    setUser(session?.user ?? null);
+  });
+  return () => {
+    subscription?.subscription.unsubscribe();
+  };
+
+    // return () => subscription.unsubscribe();
   }, []);
 
   // Load enrolled courses
