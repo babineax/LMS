@@ -1,4 +1,4 @@
-import * as FileSystem from "expo-file-system";
+import * as FileSystemLegacy from 'expo-file-system/legacy';
 
 import { createClient } from "@supabase/supabase-js";
 
@@ -7,26 +7,22 @@ export const supabase = createClient(
   process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-async function uriToBlob(uri: string): Promise<Blob> {
-  const base64 = await FileSystem.readAsStringAsync(uri, {
-    encoding: FileSystem.EncodingType.Base64,
-  });
-  const byteCharacters = atob(base64);
-  const byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
+function uriToBlob(base64: string) {
+  const binary = global.atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
   }
-  const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray], { type: "image/jpeg" }); // or mime type from asset if available
-  return blob;
+  return bytes;
 }
-
-
 
 export async function uploadFile(uri: string, fileName: string): Promise<string | null> {
   try {
+    const base64 = await FileSystemLegacy.readAsStringAsync(uri, {
+      encoding: FileSystemLegacy.EncodingType.Base64,
+    });
     // Convert local URI to a Blob for Supabase
-    const blob = await uriToBlob(uri);
+    const blob = await uriToBlob(base64);
 
     // Upload the blob
     const { error } = await supabase.storage
