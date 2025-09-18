@@ -169,7 +169,7 @@ export const ImageUpload: React.FC<ImageUploadProp> = ({
       }
   
   };
-  console.log(imageUri);
+  console.log('imguri', imageUri);
 
   return (
     <TouchableOpacity
