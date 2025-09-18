@@ -86,7 +86,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       <View className="flex-row gap-2 pt-3 mt-3 border-t border-[#D0E8E6]">
         {onCreateAssignment && (
           <TouchableOpacity
-            className="flex-1 bg-[#1ABC9C] py-2 rounded-lg flex-row items-center justify-center"
+            className="flex-1 bg-[#18B9A7] py-2 rounded-lg flex-row items-center justify-center"
             onPress={onCreateAssignment}
           >
             <Ionicons name="add-circle" size={16} color="white" />
@@ -98,7 +98,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
 
         {onGradeWork && (
           <TouchableOpacity
-            className="flex-1 bg-[#16A085] py-2 rounded-md flex-row items-center justify-center"
+            className="flex-1 bg-[#18B9A7] py-2 rounded-md flex-row items-center justify-center"
             onPress={onGradeWork}
           >
             <Ionicons name="checkmark-circle" size={16} color="white" />
