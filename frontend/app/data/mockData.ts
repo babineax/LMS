@@ -1,3 +1,5 @@
+import { StatCardProps } from "../element/StatCard";
+
 // Types Definitions
 type ActivityType = "enrollment" | "completion" | "question" | "review";
 type EventType = "live" | "deadline" | "meeting";
@@ -14,7 +16,7 @@ interface Event {
   type: EventType;
 }
 
-export const stats = [
+export const stats: StatCardProps[] = [
   { title: "Total Students", value: "1,247", icon: "people", change: "+12%" },
   { title: "Active Courses", value: "8", icon: "book", change: "+2" },
   {

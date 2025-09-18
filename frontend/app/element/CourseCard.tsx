@@ -34,7 +34,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
           {course.title}
         </Text>
         <View
-          className={`self-start px-3 py-1 rounded-full ${course.status === "active" ? "bg-[#A1EBE5]" : "bg-gray-100"}`}
+          className={`self-start px-3 py-1 rounded-lg ${course.status === "active" ? "bg-[#A1EBE5]" : "bg-gray-100"}`}
         >
           <Text
             className={`text-xs font-medium ${course.status === "active" ? "text-[#2C3E50]" : "text-gray-600"}`}
@@ -70,7 +70,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
         </View>
         <View className="w-full bg-gray-200 rounded-full h-2">
           <View
-            className="bg-[#1ABC9C] h-2 rounded-full"
+            className="bg-[#18B9A7] h-2 rounded-full"
             style={{ width: `${course.completion}%` }}
           />
         </View>
@@ -98,7 +98,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
 
         {onGradeWork && (
           <TouchableOpacity
-            className="flex-1 bg-[#16A085] py-2 rounded-lg flex-row items-center justify-center"
+            className="flex-1 bg-[#16A085] py-2 rounded-md flex-row items-center justify-center"
             onPress={onGradeWork}
           >
             <Ionicons name="checkmark-circle" size={16} color="white" />

@@ -1,47 +1,43 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
+import { File, Image } from "lucide-react-native";
 
 interface QuestionProps {
   index: number;
-  type: "multiple-choice" | "input" | "both" | "input-upload";
+  // type: "multiple-choice" | "input" | "both" | "input-upload";
   question: string;
   options?: string[];
-  correctAnswer?: string;
+  correctAnswer?: string | null;
   onSelect?: (index: number, option: string) => void;
   onInput?: (index: number, value: string) => void;
   onUpload?: (index: number, file: { uri: string; type: string; name: string }) => void;
   submitted: boolean;
-  selectedAnswer?: string;
-  inputAnswer?: string;
-  uploadedFile?: { uri: string; type: string; name: string };
+  inputAnswer?: string | null;
+  uploadedFile?: { uri: string; type: string; name: string } | null;
 }
 
-type DocumentPickerResult =
-  | { canceled: true }
-  | { canceled: false; assets: DocumentPickerAsset[] };
+// type DocumentPickerResult =
+//   | { canceled: true }
+//   | { canceled: false; assets: DocumentPickerAsset[] };
 
-type DocumentPickerAsset = {
-  mimeType?: string; 
-  name: string;      
-  size?: number;     
-  uri: string;       
-  type?: string;     
-};
+// type DocumentPickerAsset = {
+//   mimeType?: string; 
+//   name: string;      
+//   size?: number;     
+//   uri: string;       
+//   type?: string;     
+// };
 
-type DocFile = DocumentPicker.DocumentPickerAsset;
+// type DocFile = DocumentPicker.DocumentPickerAsset;
 
-export default function Question({
+export default function InputQuestion({
   index,
-  type,
   question,
-  options = [],
   correctAnswer,
-  onSelect,
   onInput,
   onUpload,
   submitted,
-  selectedAnswer,
   inputAnswer,
   uploadedFile,
 }: QuestionProps) {
@@ -74,6 +70,7 @@ export default function Question({
     }
   };
 
+
   return (
     <View className="bg-bgLight rounded-2xl p-4 shadow-md mb-4">
       {/* Question */}
@@ -82,35 +79,45 @@ export default function Question({
       </Text>
 
       {/* Input + Upload */}
-      {type === "input-upload" && (
+     
         <View className="space-y-3">
           {/* Text Input */}
           <TextInput
+            style={{
+                height: 100,
+                borderColor: "#ccc",
+                borderWidth: 1,
+                borderRadius: 8,
+                padding: 10,
+                textAlignVertical: "top"
+            }}
             className="border border-border rounded-xl p-3"
             placeholder="Type your answer..."
-            value={inputAnswer}
+            value={inputAnswer!}
             editable={!submitted}
             onChangeText={(text) => onInput?.(index, text)}
           />
 
-          <Text className="text-center text-gray-500">OR</Text>
+          {/* <Text className="text-center text-gray-500">OR</Text> */}
 
           {/* Upload buttons */}
-          <View className="flex-row justify-between">
+          <View className=" py-4">
             <TouchableOpacity
-              className="flex-1 bg-primaryColor p-3 rounded-xl mx-1"
+              className="flex-1 border border-gray-300 h-20 p-3 rounded-xl mx-1"
               onPress={pickDocument}
               disabled={submitted}
             >
-              <Text className="text-white text-center">Upload Document</Text>
+              <File size={24} color="#6B7280" />
+              <Text className="text-headingColor text-center">Upload Document</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              className="flex-1 bg-secondaryColor p-3 rounded-xl mx-1"
+              className="flex-1 border  border-gray-300 h-20 p-3 rounded-xl mx-1 my-3"
               onPress={pickImage}
               disabled={submitted}
             >
-              <Text className="text-white text-center">Upload Image</Text>
+              <Image size={24} color="#6B7280" />
+              <Text className="text-headingColor text-center">Upload Image</Text>
             </TouchableOpacity>
           </View>
 
@@ -123,7 +130,7 @@ export default function Question({
             </View>
           )}
         </View>
-      )}
+      
     </View>
   );
 }

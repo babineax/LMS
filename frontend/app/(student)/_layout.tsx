@@ -1,7 +1,7 @@
 import { Tabs } from "expo-router";
 import { BookOpen, Building, Settings, Star, BookCheck } from "lucide-react-native";
 
-type TabBarIconProps = {
+export type TabBarIconProps = {
   size: number;
   color: string;
 };

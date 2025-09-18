@@ -39,6 +39,7 @@ export const validateSignUpForm = (data: {
   confirmPassword: string;
   fullName: string;
   role: string;
+  institution_id?: string;
 }) => {
   const errors: Record<string, string> = {};
 
@@ -70,7 +71,11 @@ export const validateSignUpForm = (data: {
   if (!data.role) {
     errors.role = "Please select a role";
   }
-
+  
+  if (data.role === 'teacher' && !data.institution_id) {
+    errors.institution_id = "Please select an institution";
+  }
+  
   return {
     valid: Object.keys(errors).length === 0,
     errors,

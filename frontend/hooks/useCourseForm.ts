@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Alert } from "react-native";
 import { CourseFormData } from "../types/types";
+import { uploadFile, supabase } from "@/utils/fileUpload";
 
 //  hook to manage course form state and actions
 export const useCourseForm = () => {
@@ -19,7 +20,7 @@ export const useCourseForm = () => {
     tags: [],
     prerequisites: "",
     learningOutcomes: [""],
-    courseImage: null,
+    courseImage: '',
     isPublic: true,
     allowDiscussions: true,
     certificateEnabled: true,
@@ -87,11 +88,33 @@ export const useCourseForm = () => {
     if (!validateForm()) return;
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      console.log("Course submitted:", formData);
+    try {
+      let uploadedUrl: string | null = null;
+
+    if (formData.courseImage) {
+      // uploadFile returns { id, path, fullPath }
+      uploadedUrl = await uploadFile(
+        formData.courseImage,
+        `course-${Date.now()}.jpg`
+      );
+      
+    }
+// if (uploaded) {
+      //   // Get public URL from the upload metadata's fullPath
+      //   uploadedUrl = supabase.storage
+      //     .from("course_content")
+      //     .getPublicUrl(uploaded.fullPath).data.publicUrl;
+      // }
+
+    const payload = { ...formData, courseImage: uploadedUrl };
+    console.log("Course submitted:", payload);
       Alert.alert("Success", "Course created successfully!");
+    } catch (err) {
+      console.error(err);
+      Alert.alert("Error", "Failed to upload course image");
+    } finally {
       setIsSubmitting(false);
-    }, 2000);
+    }
   };
 
   // Save the current form state as a draft

@@ -11,15 +11,30 @@ import {
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { getAuthErrorMessage, validateSignUpForm } from "@/utils/validation";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import BottomSheetModal from "@/components/BottomSheetModal";
+import { createClient } from "@supabase/supabase-js";
+
+type Role = "admin" | "student" | "teacher";
 
 interface FormData {
   name: string;
   email: string;
   password: string;
   confirmPassword: string;
-  role: "admin" | "student" | "teacher";
+  role: Role;
+  institutionId: string;
 }
+
+type Institution = {
+  id: string;
+  name: string;
+};
+
+const supabase = createClient(
+  process.env.EXPO_PUBLIC_SUPABASE_URL!,
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function App() {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +43,10 @@ export default function App() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { role } = useLocalSearchParams<{ role?: string }>();
+  const [showInstitutionModal, setShowInstitutionModal] = useState(false);
+  const [institutions, setInstitutions] = useState<{ label: string; value: string }[]>([]);
+
 
   // Form state
   const [formData, setFormData] = useState<FormData>({
@@ -35,7 +54,8 @@ export default function App() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "student",
+    role: (role as Role) || "student",
+    institutionId: "",
   });
 
   // Form errors
@@ -66,8 +86,33 @@ export default function App() {
     }
   };
 
+  const openInstitutionModal = async () => {
+    const { data, error } = await supabase
+    .from("institutions")
+    .select("id, name");
+
+
+    if (error) {
+      console.error("Error fetching institutions:", error.message);
+      return;
+    }
+
+    const formatted = (data ?? []).map(inst => ({
+      label: inst.name,
+      value: inst.id,
+    }));
+
+    setInstitutions(formatted);
+    setShowInstitutionModal(true);
+  };
+
   // Function to handle form submission
   const onSubmit = async () => {
+
+    if (formData.role === "teacher" && !formData.institutionId) {
+      setErrors({ institutionId: "Institution is required for teachers" });
+      return;
+    }
     // Validate form
     const validation = validateSignUpForm({
       email: formData.email,
@@ -75,6 +120,7 @@ export default function App() {
       confirmPassword: formData.confirmPassword,
       fullName: formData.name,
       role: formData.role,
+      institution_id: formData.institutionId,
     });
 
     if (!validation.valid) {
@@ -90,6 +136,7 @@ export default function App() {
       const { error } = await signUp(formData.email, formData.password, {
         full_name: formData.name,
         role: formData.role,
+        ...(formData.role === "teacher" && { institution_id: formData.institutionId }),
       });
 
       if (error) {
@@ -113,7 +160,6 @@ export default function App() {
   };
 
   return (
-    // Entire app wrapped inside SafeAreaProvider and SafeAreaView to prevent UI overlap with device notches.
     <SafeAreaProvider>
       <SafeAreaView className="flex-1 bg-bgLight font-sans">
         <View className="flex-1 p-10">
@@ -125,7 +171,7 @@ export default function App() {
 
           {/* Title */}
           <Text className="text-4xl text-[#2C3E50] font-bold">
-            Create Your Account
+            {role === 'teacher' ? 'Signing up as an instructor':'Create Your Account'}
           </Text>
           <Text className="text-xs text-[#2C3E50] mt-1">
             Enter your details to create an account.
@@ -149,6 +195,37 @@ export default function App() {
                 </Text>
               )}
             </View>
+            
+            {/* Institution ID */}
+            {role === "teacher" && (
+              <View>
+                <Text className="text-lg text-headingColor mb-2">Institution ID</Text>
+                <TouchableOpacity
+                  className="flex-row items-center border border-[#1ABC9C] h-12 rounded-lg px-2.5 relative"
+                  onPress={openInstitutionModal}
+                >
+                  <Text>
+                    {formData.institutionId
+                      ? institutions.find(item => item.value === formData.institutionId)?.label
+                      : "Institution ID"}
+                  </Text>
+                </TouchableOpacity>
+                <BottomSheetModal
+                  visible={showInstitutionModal}
+                  onClose={() => setShowInstitutionModal(false)}
+                  items={institutions}
+                  onSelect={(item) => {
+                    setFormData((prev) => ({ ...prev, institutionId: item.value }));
+                    setShowInstitutionModal(false);
+                  }}
+                />
+                {errors.institutionId && (
+                  <Text className="text-red-500 text-sm mt-1">
+                    {errors.institutionId}
+                  </Text>
+                )}
+              </View>
+            )}
 
             {/* Email */}
             <View>

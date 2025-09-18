@@ -51,6 +51,7 @@ export const authService = {
     userData: {
       full_name: string;
       role: "admin" | "student" | "teacher";
+      institution_id?: string;
     }
   ) => {
     try {
@@ -59,7 +60,9 @@ export const authService = {
         password,
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        return { data: null, error: `Auth error: ${authError.message}` };
+      };
 
       if (authData.user) {
         // Create user profile in users table
@@ -68,9 +71,12 @@ export const authService = {
           email: authData.user.email!,
           full_name: userData.full_name,
           role: userData.role,
+          institution_id: userData.role === "teacher" ? userData.institution_id ?? null : null,
         });
 
-        if (profileError) throw profileError;
+        if (profileError) {
+          return { data: null, error: `Profile error: ${profileError.message}` };
+        };
       }
 
       return { data: authData, error: null };
