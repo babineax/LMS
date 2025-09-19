@@ -191,8 +191,8 @@ const CreateCourse = () => {
           {/* Course Image */}
           <FormSection title="Course Image">
             <ImageUpload
-              imageUri={formData.courseImage}
-              onImageSelect={(uri) => handleInputChange("courseImage", uri)}
+              imageUri={formData.image_url}
+              onImageSelect={(uri) => handleInputChange("image_url", uri)}
             />
           </FormSection>
 

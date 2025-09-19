@@ -62,10 +62,11 @@ export interface CourseFormData {
   tags: string[];
   prerequisites: string;
   learningOutcomes: string[];
-  courseImage: string | null;
+  image_url: string | null;
   isPublic: boolean;
   allowDiscussions: boolean;
   certificateEnabled: boolean;
+  userId?: string;
 }
 
 // ----------------------

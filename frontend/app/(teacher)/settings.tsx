@@ -12,11 +12,13 @@ export default function Settings() {
         <View className="flex-1 mt-4">
           <View>
             <TouchableOpacity
+              onPress={() => router.push("/profile")}
               className="my-2 py-1 border-b-hairline border-headingColor"
             >
               <Text>Profile</Text>
             </TouchableOpacity>
             <TouchableOpacity
+            onPress={() => router.push("/teachersSettings")}
               className="my-2 py-1 border-b-hairline border-headingColor"
             >
               <Text>Settings</Text>

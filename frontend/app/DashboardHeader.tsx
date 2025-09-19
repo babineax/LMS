@@ -5,7 +5,7 @@ import { supabase } from "@/utils/fileUpload";
 const DashboardHeader: React.FC = () => {
 
   const { user } = useAuth();
-  console.log(user?.identities);
+  console.log(user);
 
 
   return (

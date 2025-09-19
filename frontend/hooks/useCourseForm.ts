@@ -2,10 +2,12 @@ import { useState } from "react";
 import { Alert } from "react-native";
 import { CourseFormData } from "../types/types";
 import { uploadFile, supabase } from "@/utils/fileUpload";
+import { useAuth } from "@/contexts/AuthContext";  
 
 //  hook to manage course form state and actions
 export const useCourseForm = () => {
   // Initializing form state with its default values
+  const {user} = useAuth();
   const [formData, setFormData] = useState<CourseFormData>({
     title: "",
     description: "",
@@ -20,7 +22,7 @@ export const useCourseForm = () => {
     tags: [],
     prerequisites: "",
     learningOutcomes: [""],
-    courseImage: '',
+    image_url: '',
     isPublic: true,
     allowDiscussions: true,
     certificateEnabled: true,
@@ -91,23 +93,38 @@ export const useCourseForm = () => {
     try {
       let uploadedUrl: string | null = null;
 
-    if (formData.courseImage) {
+    if (formData.image_url) {
       // uploadFile returns { id, path, fullPath }
       uploadedUrl = await uploadFile(
-        formData.courseImage,
+        formData.image_url,
         `course-${Date.now()}.jpg`
       );
       
     }
-// if (uploaded) {
-      //   // Get public URL from the upload metadata's fullPath
-      //   uploadedUrl = supabase.storage
-      //     .from("course_content")
-      //     .getPublicUrl(uploaded.fullPath).data.publicUrl;
-      // }
 
-    const payload = { ...formData, courseImage: uploadedUrl };
-    console.log("Course submitted:", payload);
+    const payload = { ...formData, image_url: uploadedUrl };
+    // const { data, error } = await supabase
+    //   .from("courses")
+    //   .insert({
+    //     title: payload.title,
+    //     description: payload.description,
+    //     teacher_id: user?.id,
+    //     institution_id: user?.institution_id,
+    //     duration: payload.duration,
+    //     max_capacity: payload.maxStudents,
+    //     fee_amount: payload.price,
+    //     category: payload.category,
+    //     image_url: uploadedUrl,
+    //   })
+    //   .select(); 
+      
+    //   if (error) {
+    //     console.error("Error inserting course:", error);
+    //     return;
+    //   }
+
+      // console.log("Course inserted:", data);
+      console.log("Course submitted:", payload);
       Alert.alert("Success", "Course created successfully!");
     } catch (err) {
       console.error(err);

@@ -13,6 +13,7 @@ function uriToBlob(base64: string) {
   for (let i = 0; i < binary.length; i++) {
     bytes[i] = binary.charCodeAt(i);
   }
+  console.log("starting to convert");
   return bytes;
 }
 
@@ -25,11 +26,12 @@ export async function uploadFile(uri: string, fileName: string): Promise<string 
     const blob = await uriToBlob(base64);
 
     // Upload the blob
-    const { error } = await supabase.storage
+    const { data, error } = await supabase.storage
       .from("course_content") 
       .upload(fileName, blob, {
         cacheControl: "3600",
-        upsert: true,
+        upsert: false,
+        contentType: 'image/jpeg',
       });
 
     if (error) throw error;
@@ -39,9 +41,11 @@ export async function uploadFile(uri: string, fileName: string): Promise<string 
       .from("course_content")
       .getPublicUrl(fileName);
 
+    console.log("Upload result:", { data, error });
+    console.log("Public URL:", publicUrlData.publicUrl);
     return publicUrlData.publicUrl; 
-  } catch (err) {
-    console.error("Upload failed:", err);
+  } catch (err: any) {
+    console.error("Upload failed:", err.message, err);
     return null;
   }
 }
