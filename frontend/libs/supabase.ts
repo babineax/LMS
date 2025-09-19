@@ -109,21 +109,46 @@ export const authService = {
   },
 
   // Get current user profile
-  getCurrentUserProfile: async () => {
+  getCurrentUserProfile: async (userId?: string): Promise<{ data: any; error: any }> => {
     try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) return { data: null, error: "No user found" };
-
-      const { data: profile, error } = await supabase
+      let authUser: any = null;
+      
+      if (!userId) {
+        const { data, error: userError } = await supabase.auth.getUser();
+        if (!userError ) return { data: null, error: userError };
+        authUser = data?.user ?? null;
+        if (!authUser) return { data: null, error: "No auth user" };
+        userId = authUser.id;
+      };
+      
+      //  Get user profile by id
+      const { data: profileById, error: idError } = await supabase
         .from("users")
         .select("*")
-        .eq("id", user.id)
-        .single();
+        .eq("id", userId!)
+        .maybeSingle(); 
 
-      return { data: profile, error };
+      if (idError) return { data: null, error: idError };
+
+      if (profileById) {
+        return { data: profileById, error: null };
+      }
+      
+      // try to find user by email
+      if (authUser?.email) {
+        const { data: profileByEmail, error: emailError } = await supabase
+          .from("users")
+          .select("*")
+          .eq("email", authUser.email)
+          .maybeSingle();
+
+        if (emailError) return { data: null, error: emailError };
+        return { data: profileByEmail ?? null, error: null };
+      }
+
+      
+      // nothing found
+      return { data: null, error: null };
     } catch (error) {
       return { data: null, error };
     }

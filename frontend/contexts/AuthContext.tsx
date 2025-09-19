@@ -4,6 +4,7 @@ import { Database } from "@/types/database";
 import { authService, supabase } from "@/libs/supabase";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Course } from "@/types/types";
+import { router } from "expo-router";
 
 type UserProfile = Database["public"]["Tables"]["users"]["Row"];
 
@@ -65,11 +66,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   ): Promise<UserProfile | null> => {
     try {
       const { data: profile, error } =
-        await authService.getCurrentUserProfile();
+        await authService.getCurrentUserProfile(userId);
       if (error) {
         console.error("Error loading profile:", error);
         return null;
       }
+
+      if (!profile) {
+        console.warn("No profile found for user", userId ?? "(used auth user)");
+        setProfile(null);
+        return null;
+      }
+
       setProfile(profile);
       return profile;
     } catch (error) {
@@ -86,54 +94,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return null;
   };
 
+  
+
   useEffect(() => {
     // Initial session check
-    // supabase.auth.getSession().then(({ data: { session } }) => {
-    //   setSession(session);
-    //   setUser(session?.user ?? null);
-    //   setToken(session?.access_token ?? null);
-    //   if (session?.user) {
-    //     loadUserProfile(session.user.id);
-    //   }
-    //   setLoading(false);
-    // });
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setToken(session?.access_token ?? null);
 
-    // // Listen for auth state changes
-    // const {
-    //   data: { subscription },
-    // } = supabase.auth.onAuthStateChange(async (event, session) => {
-    //   console.log("Auth event:", event);
-    //   setSession(session);
-    //   setUser(session?.user ?? null);
-    //   setToken(session?.access_token ?? null);
+      if (session?.user) {
+        // Restore profile from your users table
+        await loadUserProfile(session.user.id);
+      } else {
+        setProfile(null);
+      }
 
-    //   if (session?.user) {
-    //     await loadUserProfile(session.user.id);
-    //   } else {
-    //     setProfile(null);
-    //   }
+      setLoading(false);
+    });
 
-    //   setLoading(false);
-    // });
-    const getSession = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      setUser(session.user); // Restore user into context
-    }
-    setLoading(false);
-  };
+    // Listen for auth state changes
+    const {
+        data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+        console.log("Auth event:", event);
+        setSession(session);
+        setUser(session?.user ?? null);
+        setToken(session?.access_token ?? null);
 
-  getSession();
+        if (session?.user) {
+          await loadUserProfile(session.user.id);
+        } else {
+          setProfile(null);
+        }
 
-  // Optional: listen for session changes (login, logout, token refresh)
-  const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-    setUser(session?.user ?? null);
-  });
-  return () => {
-    subscription?.subscription.unsubscribe();
-  };
+        setLoading(false);
+      });
 
-    // return () => subscription.unsubscribe();
+    return () => subscription.unsubscribe();
+    
   }, []);
 
   // Load enrolled courses
@@ -181,6 +180,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setCourses((prev) => prev.filter((c) => c.id !== course.id));
   };
 
+  const signOut = async (): Promise<{ error: any }> => {
+    try {
+      const { error } = await authService.signOut();
+      if (error) {
+        console.error("Error signing out:", error);
+        return { error };
+      }
+
+      // Clear state
+      setSession(null);
+      setUser(null);
+      setProfile(null);
+      setToken(null);
+      router.push("/sign");
+      console.log("Signed out successfully");
+      return { error };
+    } catch (err) {
+      console.error("Unexpected error during sign out:", err);
+      return { error: err };
+    }
+  };
+
   const value: AuthContextType = {
     session,
     user,
@@ -189,7 +210,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     token,
     signUp: authService.signUp,
     signIn: authService.signIn,
-    signOut: authService.signOut,
+    signOut,
     resetPassword: authService.resetPassword,
     refreshProfile,
     courses,

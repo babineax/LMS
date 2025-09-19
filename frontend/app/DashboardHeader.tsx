@@ -4,8 +4,8 @@ import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "@/utils/fileUpload";
 const DashboardHeader: React.FC = () => {
 
-  const { user } = useAuth();
-  console.log(user);
+  const { profile } = useAuth();
+  console.log(profile);
 
 
   return (
@@ -13,8 +13,11 @@ const DashboardHeader: React.FC = () => {
       {/* <Text className="text-2xl font-bold text-[#2C3E50] mb-1">
         Teachers Dashboard
       </Text> */}
-      <Text className="text-gray-600 text-sm">
-        Welcome back! Here&apos;s what&apos;s happening with your courses.
+      <Text className="text-gray-600 text-base">
+        Welcome back {profile?.full_name}! 
+      </Text>
+      <Text className="text-gray-600 text-xs">
+        Here&apos;s what&apos;s happening with your courses.
       </Text>
     </View>
   );

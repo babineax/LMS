@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 //  hook to manage course form state and actions
 export const useCourseForm = () => {
   // Initializing form state with its default values
-  const {user} = useAuth();
+  const {profile} = useAuth();
   const [formData, setFormData] = useState<CourseFormData>({
     title: "",
     description: "",
@@ -103,27 +103,29 @@ export const useCourseForm = () => {
     }
 
     const payload = { ...formData, image_url: uploadedUrl };
-    // const { data, error } = await supabase
-    //   .from("courses")
-    //   .insert({
-    //     title: payload.title,
-    //     description: payload.description,
-    //     teacher_id: user?.id,
-    //     institution_id: user?.institution_id,
-    //     duration: payload.duration,
-    //     max_capacity: payload.maxStudents,
-    //     fee_amount: payload.price,
-    //     category: payload.category,
-    //     image_url: uploadedUrl,
-    //   })
-    //   .select(); 
+    if (profile?.role === "teacher") {
+      const { data, error } = await supabase
+        .from("courses")
+        .insert({
+          title: payload.title,
+          description: payload.description,
+          teacher_id: profile?.id,
+          institution_id: profile?.institution_id,
+          duration: payload.duration,
+          max_capacity: payload.maxStudents,
+          fee_amount: payload.price,
+          category: payload.category,
+          image_url: uploadedUrl,
+        })
+        .select(); 
       
-    //   if (error) {
-    //     console.error("Error inserting course:", error);
-    //     return;
-    //   }
-
-      // console.log("Course inserted:", data);
+      if (error) {
+        console.error("Error inserting course:", error);
+        return;
+      }
+      console.log("Course inserted:", data);
+    }
+      
       console.log("Course submitted:", payload);
       Alert.alert("Success", "Course created successfully!");
     } catch (err) {

@@ -1,6 +1,6 @@
 // deno / edge function
 import 'jsr:@supabase/functions-js/edge-runtime.d.ts'
-import { createClient } from 'npm:@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
 
 export const handleRequest = async (req: Request) => {
   const { SUPABASE_URL, SUPABASE_ANON_KEY } = Deno.env.toObject()

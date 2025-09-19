@@ -22,7 +22,7 @@ export default function TeachersProfile() {
                         Email
                     </Text>
                     <Text className="text-base text-headingColor">
-                        {user?.email}
+                        {profile?.email}
                     </Text>
                 </View>
                 <View className="my-2 border-b-hairline ">

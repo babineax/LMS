@@ -17,7 +17,14 @@ export default function StudentSettingsDrawer() {
                     <DrawerItemList {...props} />
                     <DrawerItem 
                         label="Logout" 
-                        onPress={() => console.log("Logout")} 
+                        onPress={async () => {
+                            const { error } = await signOut();
+                            if (error) {
+                                console.error("Error signing out:", error);
+                            } else {
+                                console.log("Signed out successfully");
+                            }
+                        }} 
                         icon={({ color, size }) => (
                             <LogOut size={size} color={color} />
                         )}

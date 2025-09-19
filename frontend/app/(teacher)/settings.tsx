@@ -1,8 +1,10 @@
 import { View, ScrollView, Text, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Settings() {
+  const { signOut } = useAuth();
   return (
     <SafeAreaView className="flex-1 bg-bgLight">
       <ScrollView 
@@ -28,6 +30,19 @@ export default function Settings() {
               onPress={() => router.push("/help")}
             >
               <Text>Help</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              className="my-2 py-2 border-b-hairline border-headingColor"
+              onPress={async () => {
+                const { error } = await signOut();
+                if (error) {
+                  console.error("Error signing out:", error);
+                } else {
+                  console.log("Signed out successfully");
+                }
+              }}
+            >
+              <Text>Sign Out</Text>
             </TouchableOpacity>
           </View>
         </View>
