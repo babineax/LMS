@@ -15,41 +15,41 @@ const OverviewTab: React.FC = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [refreshing, setRefreshing] = useState(false);
   const [courses, setCourses] = useState<Course[]>([]);
   const fetchCourses = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-  
-        if (!user) {
-          setCourses([]);
-          setLoading(false);
-          return;
-        }
-  
-        const { data, error: fetchError } = await supabase
-          .from('courses')
-          .select('*')
-          .eq('teacher_id', user.id)
-          .order('created_at', { ascending: false });
-  
-        if (fetchError) {
-          console.error('Error fetching courses:', fetchError);
-          return;
-        }
-  
-        setCourses(data || []);
-      } catch (err) {
-         console.error('Unexpected error:', err);
-      } finally {
+    try {
+      setLoading(true);
+      setError(null);
+
+      if (!user) {
+        setCourses([]);
         setLoading(false);
+        return;
       }
-    };
-    useEffect(() => {
-      fetchCourses();
-      // eslint-disable-next-line
-    }, [user]);
+
+      const { data, error: fetchError } = await supabase
+        .from('courses')
+        .select('*')
+        .eq('teacher_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (fetchError) {
+        console.error('Error fetching courses:', fetchError);
+        return;
+      }
+
+      setCourses(data || []);
+    } catch (err) {
+        console.error('Unexpected error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourses();
+    // eslint-disable-next-line 
+  }, [user]);
 
     const totalStudents = courses.reduce(
       (sum, course) => sum + (course.enrolled_count || 0),
