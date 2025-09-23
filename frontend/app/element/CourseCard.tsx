@@ -26,15 +26,15 @@ export const CourseCard: React.FC<CourseCardProps> = ({
         <Text className="text-lg font-bold text-[#2C3E50] mb-2">
           {course.title}
         </Text>
-        {/* <View
-          className={`self-start px-3 py-1 rounded-lg ${course.status === "active" ? "bg-[#A1EBE5]" : "bg-gray-100"}`}
+        <View
+          className={`self-start px-3 py-1 rounded-lg ${course.active ? "bg-[#A1EBE5]" : "bg-gray-100"}`}
         >
           <Text
-            className={`text-xs font-medium ${course.status === "active" ? "text-[#2C3E50]" : "text-gray-600"}`}
+            className={`text-xs font-medium ${course.active ? "text-[#2C3E50]" : "text-gray-600"}`}
           >
-            {course.status}
+            {course.active? "Active" : "Inactive"}
           </Text>
-        </View> */}
+        </View>
       </View>
       <View className="flex-row">
         <TouchableOpacity className="p-2 mr-1" onPress={onViewCourse}>
@@ -49,7 +49,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
     <View className="space-y-3">
       <View className="flex-row justify-between">
         <Text className="text-sm text-gray-600">
-          Students: {course.max_capacity}
+          Students Enrolled: {course.enrolled_count}
         </Text>
         <Text className="text-sm text-gray-600">Revenue: {course.fee_amount}</Text>
       </View>
@@ -70,7 +70,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
       </View> */}
 
       <Text className="text-xs text-gray-500">
-        Last updated: {course.updated_at}
+        Last updated: {course.updated_at?.slice(0, 10)}
       </Text>
     </View>
 

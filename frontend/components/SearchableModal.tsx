@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, View, TextInput, FlatList, Text, TouchableOpacity } from "react-native";
+import { Modal, View, TextInput, FlatList, Text, TouchableOpacity, Pressable } from "react-native";
 
 interface BottomSheetSearchableListProps<T> {
   visible: boolean;
@@ -24,31 +24,37 @@ export default function BottomSheetSearchableList<T extends { id: string }>({
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
-      <View className="flex-1 bg-white p-4">
+      <Pressable 
+          className="flex-1 bg-black/40"
+          onPress={onClose}
+      />
+      <View className="absolute bottom-0 left-0 right-0 bg-white max-h-[50%] p-4">
         <TextInput
           placeholder="Search..."
+          placeholderClassName="text-headingColor text-sm ml-2"
           value={query}
           onChangeText={setQuery}
-          className="border p-2 rounded mb-4"
+          className="border-hairline py-2 rounded-md mb-4"
         />
         <FlatList
           data={filtered}
           keyExtractor={(item) => item.id}
+          style={{paddingVertical: 8}}
           renderItem={({ item }) => (
             <TouchableOpacity
-              className="p-3 border-b border-gray-200"
+              className="px-3 py-2 border-b-hairline border-border"
               onPress={() => {
                 onSelect(item);
                 onClose();
               }}
             >
-              <Text>{String(item[displayKey])}</Text>
+              <Text className="text-headingColor">{String(item[displayKey])}</Text>
             </TouchableOpacity>
           )}
         />
-        <TouchableOpacity className="p-3 mt-4 bg-gray-200 rounded" onPress={onClose}>
+        {/* <TouchableOpacity className="p-3 mt-4 bg-gray-200 rounded" onPress={onClose}>
           <Text className="text-center">Close</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </Modal>
   );

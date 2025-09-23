@@ -14,7 +14,7 @@ interface EnrollStudentFormProps {
 }
 
 export default function EnrollStudentForm({ onClose }: EnrollStudentFormProps) {
-    const { user, profile } = useAuth();
+    const { user, profile, token } = useAuth();
     const [studentdata, setStudentData] = useState<Student | null>(null);
     const [coursedata, setCourseData] = useState<Course []>([]);
     const [showCoursePicker, setShowCoursePicker] = useState(false);
@@ -28,6 +28,7 @@ export default function EnrollStudentForm({ onClose }: EnrollStudentFormProps) {
 
     console.log(user)
     console.log(profile)
+    console.log(token)
 
     const fetchData = async () => {
         if (!user?.id) {
@@ -68,6 +69,7 @@ export default function EnrollStudentForm({ onClose }: EnrollStudentFormProps) {
                     student_name: studentName,
                 })
                 .select();
+
 
             if (error) {
                 console.error('Error enrolling student:', error);

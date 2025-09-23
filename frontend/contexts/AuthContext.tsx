@@ -28,7 +28,6 @@ interface AuthContextType {
   signOut: () => Promise<{ error: any }>;
   resetPassword: (email: string) => Promise<{ error: any }>;
   refreshProfile: () => Promise<UserProfile | null>;
-
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -66,7 +65,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return null;
       }
       console.log('=== AUTH CONTEXT DEBUG ===');
-      console.log('Context user:', user);
+      console.log('Context user:', userId);
       console.log('Context profile:', profile);
       console.log('Context session:', session);
       console.log('Context token:', token);
@@ -97,14 +96,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     // Initial session check
+    setLoading(true);
     supabase.auth.getSession().then(async ({ data: { session }, error }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setToken(session?.access_token ?? null);
       console.log('Initial session check:');
-    console.log('Session:', session);
-    console.log('Error:', error);
-    console.log('User ID:', session?.user?.id);
+      console.log('Session:', session);
+      console.log('Error:', error);
+      console.log('User ID:', session?.user?.id);
 
       console.log('=== SESSION DEBUG ===');
       console.log('Session exists:', !!session);
@@ -146,7 +146,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     return () => subscription.unsubscribe();
   // eslint-disable-next-line  
-  }, []);
+  }, [session?.user?.id]);
+
 
   const signOut = async (): Promise<{ error: any }> => {
     try {
