@@ -140,7 +140,7 @@ const CoursesTab: React.FC = () => {
           }
           onGradeWork={() => handleOpenGrading(course.id.toString())}
           onViewCourse={() => router.push(`/(admin)/course/${course.id}`)}
-          onEditCourse={() => router.push(`(admin)/edit-course/${course.id}`)}
+          onEditCourse={() => router.push(`/(admin)/edit-course/${course.id}`)}
         />
       ))}
 

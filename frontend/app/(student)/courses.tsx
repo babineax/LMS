@@ -358,7 +358,7 @@ export default function Courses() {
         }
         className="flex-grow px-6 pt-12 pb-6"
       >
-        {currentView === "list" ? (
+        {!loading && currentView === "list" ? (
           <CourseList
             courses={courses}
             title="Available Courses"
