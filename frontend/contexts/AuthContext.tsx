@@ -2,8 +2,6 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { Database } from "@/types/database";
 import { authService, supabase } from "@/libs/supabase";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Course } from "@/types/types";
 import { router } from "expo-router";
 
 type UserProfile = Database["public"]["Tables"]["users"]["Row"];
@@ -30,10 +28,7 @@ interface AuthContextType {
   signOut: () => Promise<{ error: any }>;
   resetPassword: (email: string) => Promise<{ error: any }>;
   refreshProfile: () => Promise<UserProfile | null>;
-  courses: Course[];
-  addCourse: (course: Course) => void;
-  removeCourse: (course: Course) => void;
-  setCourses: (courses: Course[]) => void;
+
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(
@@ -58,7 +53,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
-  const [courses, setCourses] = useState<Course[]>([]);
 
   // Load user profile
   const loadUserProfile = async (
@@ -71,6 +65,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         console.error("Error loading profile:", error);
         return null;
       }
+      console.log('=== AUTH CONTEXT DEBUG ===');
+      console.log('Context user:', user);
+      console.log('Context profile:', profile);
+      console.log('Context session:', session);
+      console.log('Context token:', token);
+      console.log('Context loading:', loading); // if you have this
+      console.log('==========================');
 
       if (!profile) {
         console.warn("No profile found for user", userId ?? "(used auth user)");
@@ -94,14 +95,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return null;
   };
 
-  
-
   useEffect(() => {
     // Initial session check
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session }, error }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setToken(session?.access_token ?? null);
+      console.log('Initial session check:');
+    console.log('Session:', session);
+    console.log('Error:', error);
+    console.log('User ID:', session?.user?.id);
+
+      console.log('=== SESSION DEBUG ===');
+      console.log('Session exists:', !!session);
+      console.log('User ID:', session?.user?.id);
+      console.log('Access token exists:', !!session?.access_token);
+      console.log('Session expires at:', session?.expires_at);
+      console.log('Current time:', Math.floor(Date.now() / 1000));
+      console.log('Session expired?', session?.expires_at ? session.expires_at < Math.floor(Date.now() / 1000) : 'N/A');
+      console.log('Profile ID from context:', profile?.id);
+      console.log('===================');
 
       if (session?.user) {
         // Restore profile from your users table
@@ -132,53 +145,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
     return () => subscription.unsubscribe();
-    
+  // eslint-disable-next-line  
   }, []);
-
-  // Load enrolled courses
-  useEffect(() => {
-    const loadEnrolledCourses = async () => {
-      if (!user) return;
-      try {
-        const enrolled = await AsyncStorage.getItem(`courses_${user.id}`);
-        if (enrolled) {
-          setCourses(JSON.parse(enrolled));
-        }
-      } catch (error) {
-        console.error("Error loading enrolled courses:", error);
-      }
-    };
-
-    loadEnrolledCourses();
-  }, [user]);
-
-  // Save enrolled courses
-  useEffect(() => {
-    if (!user) return;
-    const saveEnrolledCourses = async () => {
-      try {
-        await AsyncStorage.setItem(
-          `courses_${user.id}`,
-          JSON.stringify(courses)
-        );
-      } catch (error) {
-        console.error("Error saving enrolled courses:", error);
-      }
-    };
-
-    saveEnrolledCourses();
-  }, [courses, user]);
-
-  const addCourse = (course: Course) => {
-    setCourses((prev) => {
-      if (prev.some((c) => c.id === course.id)) return prev;
-      return [...prev, course];
-    });
-  };
-
-  const removeCourse = (course: Course) => {
-    setCourses((prev) => prev.filter((c) => c.id !== course.id));
-  };
 
   const signOut = async (): Promise<{ error: any }> => {
     try {
@@ -213,10 +181,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signOut,
     resetPassword: authService.resetPassword,
     refreshProfile,
-    courses,
-    setCourses,
-    addCourse,
-    removeCourse,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

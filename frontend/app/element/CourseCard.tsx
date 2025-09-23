@@ -1,16 +1,9 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Database } from "@/types/database";
 
-interface Course {
-  id: number;
-  title: string;
-  students: number;
-  completion: number;
-  revenue: string;
-  status: "active" | "draft";
-  lastUpdated: string;
-}
+type Course = Database['public']['Tables']['courses']['Row'];
 
 interface CourseCardProps {
   course: Course;
@@ -33,7 +26,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
         <Text className="text-lg font-bold text-[#2C3E50] mb-2">
           {course.title}
         </Text>
-        <View
+        {/* <View
           className={`self-start px-3 py-1 rounded-lg ${course.status === "active" ? "bg-[#A1EBE5]" : "bg-gray-100"}`}
         >
           <Text
@@ -41,7 +34,7 @@ export const CourseCard: React.FC<CourseCardProps> = ({
           >
             {course.status}
           </Text>
-        </View>
+        </View> */}
       </View>
       <View className="flex-row">
         <TouchableOpacity className="p-2 mr-1" onPress={onViewCourse}>
@@ -56,12 +49,12 @@ export const CourseCard: React.FC<CourseCardProps> = ({
     <View className="space-y-3">
       <View className="flex-row justify-between">
         <Text className="text-sm text-gray-600">
-          Students: {course.students}
+          Students: {course.max_capacity}
         </Text>
-        <Text className="text-sm text-gray-600">Revenue: {course.revenue}</Text>
+        <Text className="text-sm text-gray-600">Revenue: {course.fee_amount}</Text>
       </View>
 
-      <View>
+      {/* <View>
         <View className="flex-row justify-between mb-2">
           <Text className="text-sm text-gray-600">Completion Rate</Text>
           <Text className="text-sm font-medium text-[#2C3E50]">
@@ -74,10 +67,10 @@ export const CourseCard: React.FC<CourseCardProps> = ({
             style={{ width: `${course.completion}%` }}
           />
         </View>
-      </View>
+      </View> */}
 
       <Text className="text-xs text-gray-500">
-        Last updated: {course.lastUpdated}
+        Last updated: {course.updated_at}
       </Text>
     </View>
 

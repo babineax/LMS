@@ -1,12 +1,10 @@
 import React from "react";
 import { View, Text } from "react-native";
 import { useAuth } from "../contexts/AuthContext";
-import { supabase } from "@/utils/fileUpload";
+
 const DashboardHeader: React.FC = () => {
 
   const { profile } = useAuth();
-  console.log(profile);
-
 
   return (
     <View className="px-6 pt-4 pb-2">

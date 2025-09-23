@@ -14,7 +14,7 @@ export default function Grades() {
             // contentContainerClassName="flex-1 justify-center items-center"
         >
             {courses.length === 0 && (
-                <View className="flex-1 justify-center items-center">
+                <View className="flex-1 justify-center items-center mt-12 pt-12">
                     <Text className="text-center text-4xl">📚</Text>
                     <Text className="text-headingColor text-center text-xl">
                         Please enroll in a course to view your grades

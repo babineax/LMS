@@ -77,6 +77,11 @@ export const authService = {
         if (profileError) {
           return { data: null, error: `Profile error: ${profileError.message}` };
         };
+
+        // Set session manually
+        // if (authData.session) {
+        //   await supabase.auth.setSession(authData.session);
+        // }
       }
 
       return { data: authData, error: null };

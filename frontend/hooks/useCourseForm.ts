@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Alert } from "react-native";
 import { CourseFormData } from "../types/types";
-import { uploadFile, supabase } from "@/utils/fileUpload";
+import { uploadFile,  } from "@/utils/fileUpload";
 import { useAuth } from "@/contexts/AuthContext";  
+import { supabase } from "@/libs/supabase";
 
 //  hook to manage course form state and actions
 export const useCourseForm = () => {
@@ -103,20 +104,34 @@ export const useCourseForm = () => {
     }
 
     const payload = { ...formData, image_url: uploadedUrl };
-    if (profile?.role === "teacher") {
+
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+    if (!session || !session.user) {
+      Alert.alert("Authentication Error", "Please sign in again");
+      // You might want to redirect to login here
+      return;
+    }
+
+    if (sessionError) return;
+
+    const { data: authUser } = await supabase.auth.getUser();
+    console.log('auth.uid() from supabase:', authUser.user?.id);
+    console.log('Does auth.uid() === profile.id?', authUser.user?.id === profile?.id); 
+
       const { data, error } = await supabase
         .from("courses")
-        .insert({
+        .insert([{
           title: payload.title,
           description: payload.description,
-          teacher_id: profile?.id,
+          teacher_id: session.user.id,
           institution_id: profile?.institution_id,
           duration: payload.duration,
-          max_capacity: payload.maxStudents,
-          fee_amount: payload.price,
+          max_capacity: Number(payload.maxStudents),
+          fee_amount: Number(payload.price),
           category: payload.category,
-          image_url: uploadedUrl,
-        })
+          image_url: uploadedUrl?? null,
+        }])
         .select(); 
       
       if (error) {
@@ -124,9 +139,7 @@ export const useCourseForm = () => {
         return;
       }
       console.log("Course inserted:", data);
-    }
-      
-      console.log("Course submitted:", payload);
+
       Alert.alert("Success", "Course created successfully!");
     } catch (err) {
       console.error(err);

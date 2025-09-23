@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Course, Lesson } from "@/types/types";
+import {  Lesson } from "@/types/types";
 import { router } from "expo-router";
+import { Database } from "@/types/database";
 
+type Course = Database['public']['Tables']['courses']['Row'];
 interface CourseDetailsProps {
   course: Course;
-  onEnroll: () => void;
+  onEnroll?: () => void;
   onBack: () => void;
 }
 
@@ -89,7 +91,11 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
         {/* Course Hero */}
         <View className="bg-white">
           <Image
-            source={{ uri: course.image }}
+            source={
+              course.image_url
+                ? { uri: course.image_url }
+                : require("../assets/images/oral_literature.jpg") // local fallback
+            }
             className="w-full h-48"
             resizeMode="cover"
           />
@@ -97,9 +103,9 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
           <View className="p-6">
             <View className="flex-row items-center mb-2">
               <View className="px-3 py-1 rounded-full mr-3 bg-[#A1EBE5]">
-                <Text className="text-sm font-medium text-[#2C3E50]">
+                {/* <Text className="text-sm font-medium text-[#2C3E50]">
                   {course.level}
-                </Text>
+                </Text> */}
               </View>
               <Text className="text-sm text-gray-500">{course.category}</Text>
             </View>
@@ -111,7 +117,7 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
 
             {/* Stats Row */}
             <View className="flex-row items-center justify-between mb-6">
-              <View className="flex-row items-center">
+              {/* <View className="flex-row items-center">
                 <Ionicons name="star" size={16} color="#F39C12" />
                 <Text className="font-medium ml-1 text-[#2C3E50]">
                   {course.rating}
@@ -119,12 +125,12 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
                 <Text className="text-gray-500 ml-1">
                   ({course.reviewsCount})
                 </Text>
-              </View>
+              </View> */}
 
               <View className="flex-row items-center">
                 <Ionicons name="people" size={16} color="#6B7280" />
                 <Text className="text-gray-600 ml-1">
-                  {course.studentsCount}
+                  {course.enrolled_count}
                 </Text>
               </View>
 
@@ -138,24 +144,24 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
             <View className="flex-row items-center justify-between">
               <View>
                 <Text className="text-3xl font-bold text-[#1ABC9C]">
-                  {course.price === 0 ? "Free" : `$${course.price}`}
+                  {course.fee_amount === 0 ? "Free" : `$${course.fee_amount}`}
                 </Text>
-                {course.originalPrice &&
+                {/* {course.originalPrice &&
                   course.originalPrice > course.price && (
                     <Text className="text-gray-400 line-through">
                       ${course.originalPrice}
                     </Text>
-                  )}
+                  )} */}
               </View>
 
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={onEnroll}
                 className="px-8 py-3 rounded-lg bg-[#1ABC9C]"
               >
                 <Text className="text-white font-bold text-lg">
                   {course.isEnrolled ? "Continue Learning" : "Enroll Now"}
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </View>
@@ -195,7 +201,7 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
                 <Text className="text-lg font-bold mb-4 text-[#2C3E50]">
                   What You&apos;ll Learn
                 </Text>
-                {course.tags.map((tag, index) => (
+                {/* {course.tags.map((tag, index) => (
                   <View key={index} className="flex-row items-center mb-2">
                     <Ionicons
                       name="checkmark-circle"
@@ -204,7 +210,7 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
                     />
                     <Text className="ml-2 text-gray-700">{tag}</Text>
                   </View>
-                ))}
+                ))} */}
               </View>
             )}
 
@@ -213,11 +219,11 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
                 <Text className="text-lg font-bold mb-4 text-[#2C3E50]">
                   Course Content
                 </Text>
-                <View className="bg-gray-50 rounded-xl overflow-hidden">
+                {/* <View className="bg-gray-50 rounded-xl overflow-hidden">
                   {course.lessons.map((lesson, index) => (
                     <LessonItem key={lesson.id} lesson={lesson} index={index} />
                   ))}
-                </View>
+                </View> */}
               </View>
             )}
 

@@ -1,11 +1,5 @@
 import * as FileSystemLegacy from 'expo-file-system/legacy';
-
-import { createClient } from "@supabase/supabase-js";
-
-export const supabase = createClient(
-  process.env.EXPO_PUBLIC_SUPABASE_URL!,
-  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
-);
+import { supabase } from "@/libs/supabase";
 
 function uriToBlob(base64: string) {
   const binary = global.atob(base64);
@@ -25,13 +19,23 @@ export async function uploadFile(uri: string, fileName: string): Promise<string 
     // Convert local URI to a Blob for Supabase
     const blob = await uriToBlob(base64);
 
+    // Determine content type
+    const fileExt = fileName.split('.').pop()?.toLowerCase();
+    let contentType = 'application/octet-stream';
+    
+    if (fileExt === 'jpg' || fileExt === 'jpeg') contentType = 'image/jpeg';
+    else if (fileExt === 'png') contentType = 'image/png';
+    else if (fileExt === 'pdf') contentType = 'application/pdf';
+    else if (fileExt === 'doc') contentType = 'application/msword';
+    else if (fileExt === 'docx') contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+
     // Upload the blob
     const { data, error } = await supabase.storage
       .from("course_content") 
       .upload(fileName, blob, {
         cacheControl: "3600",
         upsert: false,
-        contentType: 'image/jpeg',
+        contentType,
       });
 
     if (error) throw error;

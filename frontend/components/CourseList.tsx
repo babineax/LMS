@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { CourseCard } from './CourseCard';
-import { Course } from '@/types/types';
+import { Database } from "@/types/database";
+
+type Course = Database['public']['Tables']['courses']['Row'];
 
 interface CourseListProps {
   courses: Course[];
@@ -27,8 +29,8 @@ export const CourseList: React.FC<CourseListProps> = ({
 
   const filteredCourses = courses.filter(course => {
     const categoryMatch = selectedFilter === 'all' || course.category === selectedFilter;
-    const levelMatch = selectedLevel === 'all' || course.level === selectedLevel;
-    return categoryMatch && levelMatch;
+    // const levelMatch = selectedLevel === 'all' || course.level === selectedLevel;
+    return categoryMatch;
   });
 
   return (

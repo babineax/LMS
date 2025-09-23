@@ -15,7 +15,7 @@ type FAQ = {
 const faqs: FAQ[] = [
   {
     question: "How do I enroll in a course?",
-    answer: "Go to the Courses tab, select your desired course, and tap Enroll. The course will then appear in your dashboard.",
+    answer: "Request for your instructor or administrator to enroll you. The course will then appear in your dashboard.",
   },
   {
     question: "Where can I view my grades?",

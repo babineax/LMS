@@ -1,19 +1,27 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Modal, ScrollView } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, Modal, ScrollView, RefreshControl } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { courses } from "../../app/data/mockData";
 import { CourseCard } from "../../app/element/CourseCard";
 import CreateAssignmentForm from "../../app/CreateAssignmentForm";
 import GradingUI from "../../app/GradingUI";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/libs/supabase";
+import { Database } from "@/types/database";
+
+type Course = Database['public']['Tables']['courses']['Row'];
 
 const CoursesTab: React.FC = () => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const [showCreateAssignment, setShowCreateAssignment] = useState(false);
   const [showGrading, setShowGrading] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState<string | null>(null);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [refreshing, setRefreshing] = useState(false);
+
 
   const handleCreateAssignment = (courseId?: string) => {
     setSelectedCourseId(courseId || null);
@@ -25,10 +33,64 @@ const CoursesTab: React.FC = () => {
     setShowGrading(true);
   };
 
+  const fetchCourses = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      if (!user) {
+        setCourses([]);
+        setLoading(false);
+        return;
+      }
+
+      const { data, error: fetchError } = await supabase
+        .from('courses')
+        .select('*')
+        .eq('teacher_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (fetchError) {
+        console.error('Error fetching courses:', fetchError);
+        return;
+      }
+
+      setCourses(data || []);
+    } catch (err) {
+       console.error('Unexpected error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRefresh = () => {
+    try {
+      setRefreshing(true);
+      
+      fetchCourses();
+    } catch (err) {
+      console.error('Unexpected error:', err);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCourses();
+    // eslint-disable-next-line
+  }, [user]);
+
   return (
     <ScrollView 
-    showsVerticalScrollIndicator={false}
-    className="py-6">
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+        />
+      }
+      className="py-6"
+    >
       {/* Header with Action Buttons */}
       <View className="flex-row justify-between p-2 items-center my-6">
         <Text className="text-[20px] font-bold text-[#2C3E50]">My Courses</Text>

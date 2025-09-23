@@ -5,7 +5,7 @@ import {
   ScrollView,
   Switch,
   TouchableOpacity,
-  SafeAreaView,
+  Alert,
   Linking,
 } from "react-native";
 
@@ -26,7 +26,7 @@ import {
   SettingsSectionProps,
   SwitchItemProps,
 } from "@/types/types";
-import { Alert } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "@/libs/supabase";
 import { router } from "expo-router";
 
