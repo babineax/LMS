@@ -29,11 +29,18 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
+<<<<<<< HEAD
     "yup": "^1.7.0"
+=======
+    "react-dom": "19.0.0",
+    "react-native-web": "^0.20.0",
+    "@expo/metro-runtime": "~5.0.4"
+>>>>>>> 596a86fd380629f41aacf838e84b52cb67999cb2
   },
   "devDependencies": {
     "@react-native-community/cli": "^13.0.0",
     "@types/react": "^19.1.9",
-    "supabase": "^2.34.3"
+    "supabase": "^2.34.3",
+    "typescript": "~5.8.3"
   }
 }

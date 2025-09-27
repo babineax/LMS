@@ -1,51 +1,103 @@
 import { View, ScrollView, Text, TouchableOpacity } from "react-native";
 import { useState, useEffect } from "react";
-import MultipleChoiceQuestion from "@/components/Quiz";
+import MultipleChoiceQuestion from "@/components/MultipleChoiceUI";
+import InputQuestion from "@/components/FileSubmission";
 import { router, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/contexts/AuthContext";
 import { parseDuration } from "@/utils/parseFunction";
 
+type AnswerValue = string | { uri: string; type: string; name: string } | null;
+
+
+type MultipleChoiceQuestionProp = {
+  question: string;
+  options: string[];
+  correctAnswer: string; 
+};
+
+type ShortAnswerQuestionProp = {
+  question: string;
+  correctAnswer: AnswerValue;
+};
+
+type FlattenedQuestion = 
+  | (MultipleChoiceQuestionProp & { type: "multiple-choice" })
+  | (ShortAnswerQuestionProp & { type: "input-upload" });
+
+
 const questions = [
-    {
-      question: "What is 2 + 2?",
-      options: ["3", "4", "5"],
-      correctAnswer: "4",
-    },
-    {
-      question: "What is 10 / 2?",
-      options: ["2", "5", "10"],
-      correctAnswer: "5",
-    },
-    {
-      question: "What is the square root of 16?",
-      options: ["3", "4", "5"],
-      correctAnswer: "4",
-    },
-    {
-      question: "What is the capital of Germany?",
-      options: ["Berlin", "London", "Paris"],
-      correctAnswer: "Berlin",
-    },
-  ];
+  {
+    id: "3",
+    type: "multiple-choice",
+    actualQuestions: [
+      {
+        question: "What is 2 + 2?",
+        options: ["3", "4", "5"],
+        correctAnswer: "4",
+      },
+      {
+        question: "What is 10 / 2?",
+        options: ["2", "5", "10"],
+        correctAnswer: "5",
+      },
+      {
+        question: "What is the square root of 16?",
+        options: ["3", "4", "5"],
+        correctAnswer: "4",
+      },
+      {
+        question: "What is the capital of Germany?",
+        options: ["Berlin", "London", "Paris"],
+        correctAnswer: "Berlin",
+      },
+    ],
+  },
+  {
+    id: "2",
+    type: "input-upload",
+    actualQuestions: [
+      {
+        question:
+          "Upload your project report or type a short summary of your work.",
+        correctAnswer: null,
+      },
+    ],
+  },
+];
+
+
+
 
 export default function Quiz() {
     const {courses} = useAuth();
     const [page, setPage] = useState(0);
     const [score, setScore] = useState(0);
-    const [answers, setAnswers] = useState<{ [key: number]: string }>({});
+    const [answers, setAnswers] = useState<{ [key: number]: AnswerValue }>({});
     const [submitted, setSubmitted] = useState(false);
 
     const { courseId, lessonId } = useLocalSearchParams<{ courseId: string; lessonId: string }>();
 
     const course = courses.find((c) => c.id === courseId);
     const lesson = course?.lessons.find((l) => l.id === lessonId);
+    console.log('lesson',lesson);
+    
     const initialDuration = parseDuration(lesson?.duration);
     const [timeLeft, setTimeLeft] = useState(initialDuration);
 
     const perPage = 3;
     const start = page * perPage;
     const end = start + perPage;
-    const currentQuestions = questions.slice(start, end);
+    
+    const flattenedQuestions: FlattenedQuestion[] = questions.filter(q => q.id === lessonId).flatMap((group) =>
+      group.actualQuestions.map((q) => ({
+        ...q,
+        type: group.type,
+      } as FlattenedQuestion))
+    );
+
+    console.log('flattenedQuestions',flattenedQuestions);
+    
+    const currentQuestions = flattenedQuestions.slice(start, end);
 
     const handleSelect = (index: number, option: string) => {
       setAnswers((prev) => ({ ...prev, [index]: option }));
@@ -68,8 +120,8 @@ export default function Quiz() {
 
     const handleSubmitQuiz = () => {
       let newScore = 0;
-      questions.forEach((q, idx) => {
-        if (answers[idx] === q.correctAnswer) {
+      flattenedQuestions.forEach((q, idx) => {
+        if (q.type === "multiple-choice" && answers[idx] === q.correctAnswer) {
           newScore++;
         }
       });
@@ -78,10 +130,21 @@ export default function Quiz() {
     };
 
     const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
-  };
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+    };
+
+    const handleInput = (index: number, value: string) => {
+      setAnswers((prev) => ({ ...prev, [index]: value }));
+    };
+
+    const handleUpload = (
+      index: number,
+      file: { uri: string; type: string; name: string }
+    ) => {
+      setAnswers((prev) => ({ ...prev, [index]: file }));
+    };
 
   if (!lesson) {
     return (
@@ -105,18 +168,42 @@ export default function Quiz() {
             Time left: {formatTime(timeLeft)}
           </Text>
         </View>
-        {currentQuestions.map((question, idx) => (
-          <MultipleChoiceQuestion
-            key={start + idx}
-            index={start + idx}
-            question={question.question}
-            options={question.options}
-            correctAnswer={question.correctAnswer}
-            selectedAnswer={answers[start + idx]}
-            onSelect={handleSelect}
-            submitted={submitted}
-          />
-        ))}
+        {currentQuestions.map((questions, idx) => {
+          const qIndex = start + idx;
+              if (questions.type === "multiple-choice") {
+                return (
+                  <MultipleChoiceQuestion
+                    key={qIndex}
+                    index={qIndex}
+                    
+                    question={questions.question}
+                    options={questions.options}
+                    correctAnswer={questions.correctAnswer}
+                    selectedAnswer={answers[qIndex]}
+                    onSelect={handleSelect}
+                    submitted={submitted}
+                  />
+                );
+              }
+
+              if (questions.type === "input-upload") {
+                return (
+                  <InputQuestion
+                    key={qIndex}
+                    index={qIndex}
+                    question={questions.question}
+                    correctAnswer={questions.correctAnswer as string}
+                    onInput={handleInput}
+                    onUpload={handleUpload}
+                    submitted={submitted}
+                    
+                    inputAnswer={answers[qIndex] as string}
+                    uploadedFile={answers[qIndex] as { uri: string; type: string; name: string }}
+                  />
+                );
+              }
+              return null
+        })}
         <View className="flex-row justify-between mt-4">
           {page > 0 && (
             <TouchableOpacity
@@ -127,7 +214,7 @@ export default function Quiz() {
             </TouchableOpacity>
           )}
 
-          {end < questions.length ? (
+          {end < flattenedQuestions.length ? (
             <TouchableOpacity
               onPress={() => setPage(page + 1)}
               className="px-10 py-3 bg-primaryColor rounded-lg"
@@ -149,7 +236,7 @@ export default function Quiz() {
         {submitted && (
           <View>
               <Text className="mt-4 text-center font-bold text-lg">
-              Final Score: {score}/{questions.length}
+              Final Score: {score}/{flattenedQuestions.length}
             </Text>
             <View className="mt-4">
               <TouchableOpacity

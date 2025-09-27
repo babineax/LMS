@@ -11,7 +11,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { LibraryAPI, useLibraryAPI, FrontendBorrowedBook } from "@/services/LibraryService";
+import { LibraryAPI, useLibraryAPI,  } from "@/services/LibraryService";
+import { FrontendBorrowedBook } from "@/types/types";
 
 // Extended interface to match your original component structure
 interface ExtendedBorrowedBook extends FrontendBorrowedBook {
@@ -22,7 +23,6 @@ interface ExtendedBorrowedBook extends FrontendBorrowedBook {
 }
 
 interface BorrowedBooksOverviewProps {
-  // Optional props to allow parent components to override default behavior
   onReturnBook?: (
     borrowId: string,
     fineAmount?: number,

@@ -25,14 +25,6 @@ export interface User {
   lastActive?: string;
 }
 
-export interface CreateUserData {
-  name: string;
-  email: string;
-  role: UserRole;
-  status?: UserStatus;
-  avatar?: string;
-}
-
 /*
  * Dashboard stats
  */
@@ -80,14 +72,14 @@ export interface CourseFormData {
 // Table-related types
 // ----------------------
 
-export interface TableColumn {
-  key: string;
-  title: string;
-  width?: "flex-1" | "flex-2" | "flex-3" | string;
-  sortable?: boolean;
-  render?: (value: any, row: TableData) => ReactNode;
-  align?: "left" | "center" | "right";
-}
+// export interface TableColumn {
+//   key: string;
+//   title: string;
+//   width?: "flex-1" | "flex-2" | "flex-3" | string;
+//   sortable?: boolean;
+//   render?: (value: any, row: TableData) => ReactNode;
+//   align?: "left" | "center" | "right";
+// }
 
 export interface TableData {
   [key: string]: any;
@@ -98,7 +90,7 @@ export interface BaseComponentProps {
   testID?: string;
 }
 
-export interface ImageUploadProps {
+export interface ImageUploadProp {
   imageUri: string | null;
   onImageSelect: (uri: string | null) => void;
 }
@@ -237,12 +229,12 @@ export interface Book {
   available: number;
 }
 
-// Props accepted by this component
+
 export interface AddUpdateDeleteBooksFormProps {
-  books?: Book[]; // all library books
-  onAddBook?: (book: Omit<Book, "id">) => void; // handler to add a book
-  onUpdateBook?: (id: string, book: Partial<Book>) => void; // handler to update
-  onDeleteBook?: (id: string) => void; // handler to delete
+  books?: FrontendBook[];
+  onAddBook: (bookData: Omit<FrontendBook, "id">) => Promise<void>;
+  onUpdateBook: (id: string, updated: Partial<FrontendBook>) => Promise<void>;
+  onDeleteBook: (id: string) => void;
 }
 
 // Defines a borrowed book record
@@ -333,7 +325,7 @@ export interface BackendBook {
   total_quantity: number;
   available_quantity: number;
   category?: string;
-  institution_id: string;
+  // institution_id: string;
   created_at: string;
 }
 
@@ -345,7 +337,7 @@ export interface FrontendBook {
   category: string;
   quantity: number;
   available: number;
-  institutionId: string;
+  // institutionId: string;
   createdAt?: string;
 }
 
@@ -386,7 +378,7 @@ export interface AddBookRequest {
   author: string;
   isbn: string;
   total_quantity: number;
-  institution_id: string;
+  // institution_id: string;
   category?: string;
 }
 

@@ -8,6 +8,7 @@ interface QuestionProps {
   onSelect: (index: number, option: string) => void;
   submitted: boolean;
   selectedAnswer?: any;
+
 }
 
 export default function MultipleChoiceQuestion({

@@ -13,7 +13,7 @@ export const TabButton: React.FC<TabButtonProps> = ({ label, icon, isActive, onP
   <TouchableOpacity
     onPress={onPress}
     className={`flex-1 flex-row items-center justify-center py-3 px-4 rounded-lg mx-1 ${
-      isActive ? 'bg-[#1ABC9C]' : 'bg-transparent'
+      isActive ? 'bg-[#1ABC9C] my-2' : 'bg-transparent'
     }`}
   >
     <Ionicons name={icon} size={16} color={isActive ? 'white' : '#2C3E50'} />

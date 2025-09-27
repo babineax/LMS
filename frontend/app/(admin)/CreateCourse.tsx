@@ -50,7 +50,7 @@ const CreateCourse = () => {
       >
         <View className="px-6 py-8">
           {/* Header */}
-          <View className="mb-8">
+          <View className="mb-8 mt-4">
             <View className="flex-row items-center mb-2">
               <View
                 className="p-3 rounded-xl mr-3"
@@ -228,7 +228,7 @@ const CreateCourse = () => {
           </FormSection>
 
           {/* Submit Buttons */}
-          <View className="space-y-4">
+          <View className="space-y-4 gap-2">
             <TouchableOpacity
               className="w-full py-4 border border-gray-200 rounded-lg items-center"
               onPress={saveDraft}

@@ -1,30 +1,32 @@
-// lib/supabaseClient.ts
 import { createClient } from "@supabase/supabase-js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import { Database } from "@/types/database";
 
-// Storage adapter for React Native
+// Storage adapter for our native
 const asyncStorageAdapter = {
   getItem: (key: string) => AsyncStorage.getItem(key),
   setItem: (key: string, value: string) => AsyncStorage.setItem(key, value),
   removeItem: (key: string) => AsyncStorage.removeItem(key),
 };
 
-// Safe localStorage adapter for Web
+// Safe localStorage adapter
 const safeLocalStorage = {
   getItem: (key: string) => {
-    if (typeof window !== "undefined" && window.localStorage)
+    if (typeof window !== "undefined" && window.localStorage) {
       return window.localStorage.getItem(key);
+    }
     return null;
   },
   setItem: (key: string, value: string) => {
-    if (typeof window !== "undefined" && window.localStorage)
+    if (typeof window !== "undefined" && window.localStorage) {
       return window.localStorage.setItem(key, value);
+    }
   },
   removeItem: (key: string) => {
-    if (typeof window !== "undefined" && window.localStorage)
+    if (typeof window !== "undefined" && window.localStorage) {
       return window.localStorage.removeItem(key);
+    }
   },
 };
 
@@ -58,19 +60,23 @@ export const authService = {
         password,
       });
 
-      if (authError) throw authError;
+      if (authError) {
+        return { data: null, error: `Auth error: ${authError.message}` };
+      };
 
       if (authData.user) {
-        // Creating user profile in users table
+        // Create user profile in users table
         const { error: profileError } = await supabase.from("users").insert({
           id: authData.user.id,
           email: authData.user.email!,
           full_name: userData.full_name,
           role: userData.role,
-          institution_id: userData.institution_id || null,
+          institution_id: userData.role === "teacher" ? userData.institution_id ?? null : null,
         });
 
-        if (profileError) throw profileError;
+        if (profileError) {
+          return { data: null, error: `Profile error: ${profileError.message}` };
+        };
       }
 
       return { data: authData, error: null };
