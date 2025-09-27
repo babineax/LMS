@@ -12,8 +12,8 @@ export default function RootLayout() {
           headerShown: false,
         }}>
           <Stack.Screen name="/" />
-          <Stack.Screen name="/auth/signUp" />
-          <Stack.Screen name="/sign" />
+          <Stack.Screen name="/(auth)/signUp" />
+          <Stack.Screen name="/(auth)/sign" />
         </Stack>
       </GestureHandlerRootView>
     
