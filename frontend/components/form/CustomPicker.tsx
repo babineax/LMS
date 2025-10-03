@@ -34,10 +34,10 @@ export const CustomPicker: React.FC<CustomPickerProps> = ({
         {label} {required && '*'}
       </Text>
       <TouchableOpacity
-        className="w-full px-4 py-3 border border-gray-200 rounded-lg flex-row items-center justify-between"
+        className="w-full px-4 py-3 border-hairline border-headingColor rounded-lg flex-row items-center justify-between"
         onPress={() => setIsOpen(!isOpen)}
       >
-        <Text className={selectedOption ? "text-gray-900" : "text-gray-500"}>
+        <Text className={selectedOption ? "text-gray-900 text-base" : "text-gray-500"}>
           {selectedOption?.label || placeholder}
         </Text>
         <Ionicons
@@ -48,7 +48,7 @@ export const CustomPicker: React.FC<CustomPickerProps> = ({
       </TouchableOpacity>
       
       {isOpen && (
-        <View className="bg-white rounded-xl shadow-sm border border-gray-100 mt-2">
+        <View className="bg-white rounded-xl shadow-sm border-hairline border-gray-200 mt-2">
           {options.map((option) => (
             <TouchableOpacity
               key={option.value}

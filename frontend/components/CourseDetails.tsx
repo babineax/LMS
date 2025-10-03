@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Course, Lesson } from "@/types/types";
+import { router } from "expo-router";
 
 interface CourseDetailsProps {
   course: Course;
@@ -18,12 +19,20 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
     "overview" | "lessons" | "reviews"
   >("overview");
 
+  const viewLesson = (lesson: Lesson, courseId: string) => {
+    if (lesson.type === "quiz" && !lesson.isLocked) {
+      router.push(`/quiz?courseId=${courseId}&lessonId=${lesson.id}`);
+    }
+  };
+
   const LessonItem: React.FC<{ lesson: Lesson; index: number }> = ({
     lesson,
     index,
   }) => (
     <View className="flex-row items-center p-4 border-b border-gray-100">
-      <View
+      <TouchableOpacity
+        onPress={() => viewLesson(lesson, course.id)}
+        disabled={lesson.isLocked || lesson.isCompleted}
         className={`w-8 h-8 rounded-full items-center justify-center mr-3 ${
           lesson.isCompleted
             ? "bg-[#1ABC9C]"
@@ -39,7 +48,7 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
         ) : (
           <Text className="text-xs font-bold text-[#2C3E50]">{index + 1}</Text>
         )}
-      </View>
+      </TouchableOpacity>
 
       <View className="flex-1">
         <Text
@@ -68,7 +77,7 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
   );
 
   return (
-    <View className="flex-1 bg-[#F1FFF8]">
+    <View className="flex-1 bg-bgLight">
       {/* Header */}
       <View className="bg-white px-6 pt-12 pb-4 shadow-sm">
         <TouchableOpacity onPress={onBack} className="mb-4">
@@ -184,7 +193,7 @@ export const CourseDetails: React.FC<CourseDetailsProps> = ({
             {activeTab === "overview" && (
               <View>
                 <Text className="text-lg font-bold mb-4 text-[#2C3E50]">
-                  What You'll Learn
+                  What You&apos;ll Learn
                 </Text>
                 {course.tags.map((tag, index) => (
                   <View key={index} className="flex-row items-center mb-2">

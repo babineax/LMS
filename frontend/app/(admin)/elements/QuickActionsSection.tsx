@@ -66,19 +66,6 @@ export const QuickActionsSection: React.FC<QuickActionsSectionProps> = ({
       },
     },
     {
-      id: "analytics",
-      title: "Analytics",
-      icon: "analytics-outline",
-      color: {
-        bg: "bg-white",
-        border: "border-slate-200",
-        active: "active:bg-teal-50",
-        iconBg: "bg-slate-100",
-        iconColor: "#2C3E50",
-        textColor: "text-slate-800",
-      },
-    },
-    {
       id: "settings",
       title: "Settings",
       icon: "settings-outline",

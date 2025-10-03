@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-interface StatCardProps {
+export interface StatCardProps {
   title: string;
   value: string;
   icon: keyof typeof Ionicons.glyphMap;

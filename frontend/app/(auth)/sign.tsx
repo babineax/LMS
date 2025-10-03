@@ -7,7 +7,8 @@ import {
   Modal,
 } from "react-native";
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { Eye, EyeOff } from "lucide-react-native";
 import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { validateEmail, getAuthErrorMessage } from "@/utils/validation";
@@ -128,10 +129,10 @@ export default function Index() {
       setTimeout(() => {
         switch (userData.role) {
           case "admin":
-            router.replace("(admin)");
+            router.replace("/(admin)");
             break;
           case "teacher":
-            router.replace("/teacher/dashboard");
+            router.replace("/(teacher)/teacher");
             break;
           case "student":
             router.replace("/(student)/courses");
@@ -141,7 +142,7 @@ export default function Index() {
             break;
         }
       }, 2000);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Unexpected error:", error);
       setErrorMessage("An unexpected error occurred: " + error.message);
     } finally {
@@ -151,26 +152,26 @@ export default function Index() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView className="flex-1 p-5 bg-[#F1FFF8] relative">
+      <SafeAreaView className="flex-1 p-5 bg-bgLight relative">
         <View className="flex-row p-5 justify-between mb-5 mt-3">
           <TouchableOpacity onPress={() => router.push("/")}>
             <Ionicons name="arrow-back" size={25} color="black" />
           </TouchableOpacity>
         </View>
 
-        <View className="p-5">
-          <Text className="text-4xl text-[#2C3E50] font-bold">
-            Welcome Back to
+        <View className="px-5">
+          <Text className="text-3xl text-[#2C3E50] font-bold">
+            Welcome Back to Your Account
           </Text>
-          <Text className="text-4xl text-[#2C3E50] font-bold">
+          {/* <Text className="text-4xl text-[#2C3E50] font-bold">
             Your Account
-          </Text>
+          </Text> */}
           <Text className="text-xs text-[#2C3E50]">
             Enter your email and password to get started.
           </Text>
         </View>
 
-        <View className="mt-11 p-5">
+        <View className="mt-6 p-5">
           <View>
             <Text className="text-lg text-[#2C3E50] mb-2">Email</Text>
             <TextInput
@@ -199,11 +200,11 @@ export default function Index() {
                 onChangeText={(value) => handleInputChange("password", value)}
               />
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <FontAwesome
-                  name={showPassword ? "eye" : "eye-slash"}
-                  size={24}
-                  color="#7E7B7B"
-                />
+                {showPassword ? (
+                  <EyeOff size={24} color="#7E7B7B" />
+                ) : (
+                  <Eye size={24} color="#7E7B7B" />
+                )}
               </TouchableOpacity>
             </View>
             {errors.password && (
@@ -213,7 +214,7 @@ export default function Index() {
             )}
           </View>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => router.push("/forgetPassword")}>
             <Text className="text-lg mt-2 text-right text-[#34967C]">
               Forgot password?
             </Text>
@@ -222,7 +223,7 @@ export default function Index() {
 
         <View className="px-5">
           {errorMessage && (
-            <View className="bg-red-50 border border-red-200 rounded-lg p-3 mt-2">
+            <View className="bg-red-50 border border-red-200 rounded-lg  mt-2">
               <Text className="text-red-600 text-sm text-center">
                 {errorMessage}
               </Text>
@@ -230,25 +231,19 @@ export default function Index() {
           )}
 
           <TouchableOpacity
-            className="bg-[#2B876E] h-[53px] rounded-lg mt-6 flex justify-center items-center shadow-md"
+            className="bg-[#2B876E] py-3 rounded-lg mt-6 flex justify-center items-center shadow-md"
             onPress={onSubmit}
             disabled={isLoading}
           >
             {isLoading ? (
               <ActivityIndicator color="white" />
             ) : (
-              <Text className="text-lg text-white font-semibold">Sign In</Text>
+              <Text className="text-lg text-white font-semibold ml-1">Sign In</Text>
             )}
           </TouchableOpacity>
         </View>
 
-        <View className="flex-row items-center gap-2.5 mt-7 px-5">
-          <View className="border-t border-[#2C3E50] flex-1"></View>
-          <Text className="text-lg font-medium text-[#2C3E50]">OR</Text>
-          <View className="border-t border-[#2C3E50] flex-1"></View>
-        </View>
-
-        <View className="flex-row absolute bottom-8 left-0 right-0 justify-center">
+        <View className="flex-row absolute  bottom-8 left-0 right-0 justify-center">
           <Text className="text-base text-[#2C3E50]">
             Don&apos;t have an account?{" "}
           </Text>
@@ -265,7 +260,7 @@ export default function Index() {
           visible={isModalVisible}
           onRequestClose={() => setIsModalVisible(false)}
         >
-          <View className="flex-1 items-center bg-black bg-opacity-50">
+          <View className="flex-1 items-center bg-black/50">
             <View
               className={`p-5 rounded-lg shadow-lg mt-20 ${
                 isSuccess ? "bg-green-500" : "bg-red-500"
