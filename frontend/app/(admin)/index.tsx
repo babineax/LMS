@@ -10,7 +10,7 @@ import { UsersTableSection } from "./elements/UsersTableSection";
 import { QuickActionsSection } from "./elements/QuickActionsSection";
 import { PaymentManagementSection } from "./bursary/PaymentManagementSection";
 import { TeacherPayoutSection } from "./bursary/TeacherPayoutSection";
-import { FeeStructureSection } from "./bursary/ FeeStructureSection";
+import { FeeStructureSection } from "./bursary/FeeStructureSection";
 
 export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   statsData = [],
