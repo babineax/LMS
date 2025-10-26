@@ -11,15 +11,30 @@ import {
 import { SafeAreaView, SafeAreaProvider } from "react-native-safe-area-context";
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { getAuthErrorMessage, validateSignUpForm } from "@/utils/validation";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
+import BottomSheetModal from "@/components/BottomSheetModal";
+import { createClient } from "@supabase/supabase-js";
+
+type Role = "admin" | "student" | "teacher";
 
 interface FormData {
   name: string;
   email: string;
   password: string;
   confirmPassword: string;
-  role: "admin" | "student" | "teacher";
+  role: Role;
+  institutionId: string;
 }
+
+type Institution = {
+  id: string;
+  name: string;
+};
+
+const supabase = createClient(
+  process.env.EXPO_PUBLIC_SUPABASE_URL!,
+  process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function App() {
   const [showPassword, setShowPassword] = useState(false);
@@ -28,6 +43,10 @@ export default function App() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { role } = useLocalSearchParams<{ role?: string }>();
+  const [showInstitutionModal, setShowInstitutionModal] = useState(false);
+  const [institutions, setInstitutions] = useState<{ label: string; value: string }[]>([]);
+
 
   // Form state
   const [formData, setFormData] = useState<FormData>({
@@ -35,20 +54,12 @@ export default function App() {
     email: "",
     password: "",
     confirmPassword: "",
-    role: "student",
+    role: (role as Role) || "student",
+    institutionId: "",
   });
 
   // Form errors
   const [errors, setErrors] = useState<Record<string, string>>({});
-
-  const roles: Array<{
-    label: string;
-    value: "admin" | "student" | "teacher";
-  }> = [
-    { label: "Admin", value: "admin" },
-    { label: "Teacher", value: "teacher" },
-    { label: "Student", value: "student" },
-  ];
 
   // Function to show a custom message modal
   const showMessage = (msg: string, success: boolean) => {
@@ -58,7 +69,7 @@ export default function App() {
     setTimeout(() => {
       setIsModalVisible(false);
       if (success) {
-         router.push("/sign");
+        router.push("/sign");
       }
     }, 2000);
   };
@@ -75,8 +86,33 @@ export default function App() {
     }
   };
 
+  const openInstitutionModal = async () => {
+    const { data, error } = await supabase
+    .from("institutions")
+    .select("id, name");
+
+
+    if (error) {
+      console.error("Error fetching institutions:", error.message);
+      return;
+    }
+
+    const formatted = (data ?? []).map(inst => ({
+      label: inst.name,
+      value: inst.id,
+    }));
+
+    setInstitutions(formatted);
+    setShowInstitutionModal(true);
+  };
+
   // Function to handle form submission
   const onSubmit = async () => {
+
+    if (formData.role === "teacher" && !formData.institutionId) {
+      setErrors({ institutionId: "Institution is required for teachers" });
+      return;
+    }
     // Validate form
     const validation = validateSignUpForm({
       email: formData.email,
@@ -84,6 +120,7 @@ export default function App() {
       confirmPassword: formData.confirmPassword,
       fullName: formData.name,
       role: formData.role,
+      institution_id: formData.institutionId,
     });
 
     if (!validation.valid) {
@@ -99,6 +136,7 @@ export default function App() {
       const { error } = await signUp(formData.email, formData.password, {
         full_name: formData.name,
         role: formData.role,
+        ...(formData.role === "teacher" && { institution_id: formData.institutionId }),
       });
 
       if (error) {
@@ -122,9 +160,8 @@ export default function App() {
   };
 
   return (
-    // Entire app wrapped inside SafeAreaProvider and SafeAreaView to prevent UI overlap with device notches.
     <SafeAreaProvider>
-      <SafeAreaView className="flex-1 bg-[#F1FFF8] font-sans">
+      <SafeAreaView className="flex-1 bg-bgLight font-sans">
         <View className="flex-1 p-10">
           <View className="flex-row justify-between mb-5 mt-3">
             <TouchableOpacity onPress={() => router.push("/")}>
@@ -133,7 +170,9 @@ export default function App() {
           </View>
 
           {/* Title */}
-          <Text className="text-4xl text-[#2C3E50] font-bold">Create Your Account</Text>
+          <Text className="text-4xl text-[#2C3E50] font-bold">
+            {role === 'teacher' ? 'Signing up as an instructor':'Create Your Account'}
+          </Text>
           <Text className="text-xs text-[#2C3E50] mt-1">
             Enter your details to create an account.
           </Text>
@@ -156,6 +195,37 @@ export default function App() {
                 </Text>
               )}
             </View>
+            
+            {/* Institution ID */}
+            {role === "teacher" && (
+              <View>
+                <Text className="text-lg text-headingColor mb-2">Institution ID</Text>
+                <TouchableOpacity
+                  className="flex-row items-center border border-[#1ABC9C] h-12 rounded-lg px-2.5 relative"
+                  onPress={openInstitutionModal}
+                >
+                  <Text>
+                    {formData.institutionId
+                      ? institutions.find(item => item.value === formData.institutionId)?.label
+                      : "Institution ID"}
+                  </Text>
+                </TouchableOpacity>
+                <BottomSheetModal
+                  visible={showInstitutionModal}
+                  onClose={() => setShowInstitutionModal(false)}
+                  items={institutions}
+                  onSelect={(item) => {
+                    setFormData((prev) => ({ ...prev, institutionId: item.value }));
+                    setShowInstitutionModal(false);
+                  }}
+                />
+                {errors.institutionId && (
+                  <Text className="text-red-500 text-sm mt-1">
+                    {errors.institutionId}
+                  </Text>
+                )}
+              </View>
+            )}
 
             {/* Email */}
             <View>
@@ -241,40 +311,9 @@ export default function App() {
             </View>
           </View>
 
-            {/* Role Selection */}
-            <View>
-              <Text className="text-lg mt-4 text-[#2C3E50] mb-2">Select Role</Text>
-              <View className="flex-row justify-around">
-                {roles.map((role) => (
-                  <TouchableOpacity
-                    key={role.value}
-                    className={`py-2 px-4 rounded-full ${
-                      formData.role === role.value
-                        ? "bg-[#1ABC9C]"
-                        : "border border-[#1ABC9C]"
-                    }`}
-                    onPress={() => handleInputChange("role", role.value)}
-                  >
-                    <Text
-                      className={`${
-                        formData.role === role.value
-                          ? "text-white"
-                          : "text-[#1ABC9C]"
-                      } font-semibold text-sm`}
-                    >
-                      {role.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-              {errors.role && (
-                <Text className="text-red-500 text-sm mt-1">{errors.role}</Text>
-              )}
-            </View>
-
           {/* Create Account Button */}
           <TouchableOpacity
-            className="bg-[#2B876E] p-5 h-[53px] rounded-lg mt-6 flex justify-center items-center w-full shadow-md"
+            className="bg-[#2B876E] px-5 py-3 rounded-lg mt-6 flex justify-center items-center w-full shadow-md"
             onPress={onSubmit}
             disabled={isLoading}
           >
@@ -286,19 +325,12 @@ export default function App() {
               </Text>
             )}
           </TouchableOpacity>
-
-          {/* OR Separator */}
-          <View className="flex-row items-center gap-2.5 mt-7">
-            <View className="border-t border-[#2C3E50] flex-1"></View>
-            <Text className="text-lg font-medium text-[#2C3E50]">OR</Text>
-            <View className="border-t border-[#2C3E50] flex-1"></View>
-          </View>
         </View>
 
         {/* Bottom Sign In link */}
         <View className="flex-row justify-center mb-8">
           <Text className="text-lg text-[#2C3E50]">Have an account?</Text>
-          <TouchableOpacity onPress={() =>   router.push("/sign")}>
+          <TouchableOpacity onPress={() => router.push("/sign")}>
             <Text className="text-lg text-[#2B876E] font-semibold ml-1">
               Sign In
             </Text>
@@ -312,7 +344,7 @@ export default function App() {
           visible={isModalVisible}
           onRequestClose={() => setIsModalVisible(false)}
         >
-          <View className="flex-1 items-center bg-black bg-opacity-50">
+          <View className="flex-1 items-center bg-black/50">
             <View
               className={`p-5 rounded-lg shadow-lg mt-20 ${isSuccess ? "bg-green-500" : "bg-red-500"}`}
             >

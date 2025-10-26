@@ -19,8 +19,8 @@ export const FormInput: React.FC<FormInputProps> = ({
         {label} {required && '*'}
       </Text>
       <TextInput
-        className="w-full px-4 py-3 border border-gray-200 rounded-lg"
-        style={{ fontSize: 16 }}
+        className="w-full px-4 py-3 border-hairline border-headingColor rounded-xl"
+        style={{ fontSize: 14 }}
         {...props}
       />
       {error && (

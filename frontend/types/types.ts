@@ -25,14 +25,6 @@ export interface User {
   lastActive?: string;
 }
 
-export interface CreateUserData {
-  name: string;
-  email: string;
-  role: UserRole;
-  status?: UserStatus;
-  avatar?: string;
-}
-
 /*
  * Dashboard stats
  */
@@ -80,14 +72,14 @@ export interface CourseFormData {
 // Table-related types
 // ----------------------
 
-export interface TableColumn {
-  key: string;
-  title: string;
-  width?: "flex-1" | "flex-2" | "flex-3" | string;
-  sortable?: boolean;
-  render?: (value: any, row: TableData) => ReactNode;
-  align?: "left" | "center" | "right";
-}
+// export interface TableColumn {
+//   key: string;
+//   title: string;
+//   width?: "flex-1" | "flex-2" | "flex-3" | string;
+//   sortable?: boolean;
+//   render?: (value: any, row: TableData) => ReactNode;
+//   align?: "left" | "center" | "right";
+// }
 
 export interface TableData {
   [key: string]: any;
@@ -98,7 +90,7 @@ export interface BaseComponentProps {
   testID?: string;
 }
 
-export interface ImageUploadProps {
+export interface ImageUploadProp {
   imageUri: string | null;
   onImageSelect: (uri: string | null) => void;
 }
@@ -237,12 +229,12 @@ export interface Book {
   available: number;
 }
 
-// Props accepted by this component
+
 export interface AddUpdateDeleteBooksFormProps {
-  books?: Book[]; // all library books
-  onAddBook?: (book: Omit<Book, "id">) => void; // handler to add a book
-  onUpdateBook?: (id: string, book: Partial<Book>) => void; // handler to update
-  onDeleteBook?: (id: string) => void; // handler to delete
+  books?: FrontendBook[];
+  onAddBook: (bookData: Omit<FrontendBook, "id">) => Promise<void>;
+  onUpdateBook: (id: string, updated: Partial<FrontendBook>) => Promise<void>;
+  onDeleteBook: (id: string) => void;
 }
 
 // Defines a borrowed book record
@@ -260,44 +252,37 @@ export interface BorrowedBook {
   status: "borrowed" | "overdue" | "returned";
 }
 
-// export interface BorrowedBooks {
-//   id: string;
-//   bookTitle: string;
-//   author: string;
-//   isbn: string;
-//   borrowerName: string;
-//   borrowerEmail: string;
-//   borrowerPhone?: string;
-//   borrowerId: string;
-//   borrowDate: Date;
-//   dueDate: Date;
-//   returnDate?: Date;
-//   status: "borrowed" | "overdue" | "returned";
-//   fineAmount?: number;
-//   renewalCount?: number;
-//   maxRenewals?: number;
-// }
-// export interface Book {
-//   id: string;
-//   title: string;
-//   author: string;
-//   isbn: string;
-//   category: string;
-//   quantity: number;
-//   available: number;
-// }
+// Setting Interfaces
+export interface SettingsSectionProps {
+  title: string;
+  children: React.ReactNode;
+}
 
-// export interface BorrowedBook {
-//   id: string;
-//   bookTitle: string;
-//   author: string;
-//   isbn: string;
-//   borrowerName: string;
-//   borrowerEmail: string;
-//   borrowDate: Date;
-//   dueDate: Date;
-//   status: "borrowed" | "overdue" | "returned";
-// }
+export interface SettingsItemProps {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  rightComponent?: React.ReactNode;
+  onPress?: () => void;
+  isLast?: boolean;
+}
+
+export interface SwitchItemProps {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  value: boolean;
+  onValueChange: (value: boolean) => void;
+  isLast?: boolean;
+}
+
+export interface ChevronItemProps {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  onPress?: () => void;
+  isLast?: boolean;
+}
 
 export interface UserRoles {
   id: string;
@@ -311,6 +296,26 @@ export interface UserRoles {
   isActive: boolean;
 }
 
+// Add user Types
+export interface InputFieldProps {
+  label: string;
+  placeholder: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  icon: React.ReactNode;
+  secureTextEntry?: boolean;
+  keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
+  multiline?: boolean;
+}
+
+export interface DropdownFieldProps {
+  label: string;
+  value: string;
+  options: string[];
+  onSelect: (value: string) => void;
+  icon: React.ReactNode;
+}
+
 // Types for API responses and requests
 export interface BackendBook {
   id: string;
@@ -320,7 +325,7 @@ export interface BackendBook {
   total_quantity: number;
   available_quantity: number;
   category?: string;
-  institution_id: string;
+  // institution_id: string;
   created_at: string;
 }
 
@@ -332,7 +337,7 @@ export interface FrontendBook {
   category: string;
   quantity: number;
   available: number;
-  institutionId: string;
+  // institutionId: string;
   createdAt?: string;
 }
 
@@ -373,7 +378,7 @@ export interface AddBookRequest {
   author: string;
   isbn: string;
   total_quantity: number;
-  institution_id: string;
+  // institution_id: string;
   category?: string;
 }
 
